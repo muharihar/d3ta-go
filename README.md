@@ -57,7 +57,15 @@ I. Logs [to-do]
 $ git clone https://github.com/muharihar/d3ta-go.git
 ```
 
-2. Development
+2. Setup
+
+```
+a. copy `conf/config-sample.yaml` to `conf/config.yaml`
+
+b. setup your dependencies/requirements (e.g: database connection, smtp, etc.)
+```
+
+3. Development
 
 ```shell
 $ cd d3ta-go
@@ -65,7 +73,7 @@ $ go run main.go db migrate
 $ go run main.go server restapi
 ```
 
-3. Build
+4. Build
 
 ```shell
 $ cd d3ta-go
@@ -74,7 +82,7 @@ $ ./d3ta-go db migrate
 $ ./d3ta-go server restapi
 ```
 
-4. Distribution [to-do]
+5. Distribution [to-do]
 
 ```shell
 $ cd d3ta-go
