@@ -81,9 +81,13 @@ $ cd d3ta-go
 $ sh build.sh
 ```
 
-Pic: REST Server is running
+Pic: REST Server is running!
 
 ![Server-REST-01.png](docs/img/Server-REST-01.png)
+
+Swagger UI URL Address: http://localhost:2020/openapi/docs/index.html
+
+![Swagger-ui-01.png](docs/img/Swagger-ui-01.png)
 
 5. Postman [to-do]
 
