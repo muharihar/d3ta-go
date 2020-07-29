@@ -1,0 +1,121 @@
+---
+# Applications
+applications:
+  name: "DDD Technical Architecture Patterns:: REST API"
+  version: "0.1.0"
+  description: "Domain-Driven Design Technical Architecture Patterns:: Golang Sample"
+  options:
+    showEngineHeader: true
+    displayOpenAPI: true
+    listener:
+      port: 1234
+
+# Databases
+databases:
+  identityDB:
+    connectionName: "db-identity"
+    driver: "mysql" # mysql, postgres, sqlserver, sqlite3
+    # mysql
+    username: "d3ta"
+    password: "d3ta"
+    hostName: "127.0.0.1:3306" # hostname:port OR path
+    dbName: "a_d3ta_iam"
+    config: "charset=utf8&parseTime=True&loc=Local"
+    maxIdleConns: 10
+    maxOpenConns: 10
+    logMode: true # shoud be "false" on production
+  mainDB:
+    connectionName: "db-main"
+    driver: "mysql" # mysql, postgres, sqlserver, sqlite3
+    # mysql
+    username: "d3ta"
+    password: "d3ta"
+    hostName: "127.0.0.1:3306" # hostname:port OR path
+    dbName: "a_d3ta_data"
+    config: "charset=utf8&parseTime=True&loc=Local"
+    maxIdleConns: 10
+    maxOpenConns: 10
+    logMode: true # shoud be "false" on production
+  logDB:
+    connectionName: "db-log"
+    driver: "mysql" # mysql, postgres, sqlserver, sqlite3
+    # mysql
+    username: "d3ta"
+    password: "d3ta"
+    hostName: "127.0.0.1:3306" # hostname:port OR path
+    dbName: "a_d3ta_logs"
+    config: "charset=utf8&parseTime=True&loc=Local"
+    maxIdleConns: 10
+    maxOpenConns: 10
+    logMode: true # shoud be "false" on production
+
+# IAM
+IAM:
+  defaultAdmin:
+    username: "admin.d3tago"
+    password: "K0uNC1!@!"
+    nickName: "Hari"
+    email: "your.email.account@email.tld"
+    authorityID: "group:admin"
+  registration:
+    activationURL: "http://%s/api/v1/auths/registration/activate"
+    defaultAuthorityID: "group:default"
+  JWT:
+    issuer: "D3TA-Go"
+    signingKey: "D3TA-GO-SigningKey"
+  casbin:
+    modelPath: "casbin/casbin_rbac_rest_model.conf"
+
+# securities
+securities:
+  captcha:
+    keyLong: 4
+    imgWidth: 120
+    imgHeight: 40
+    imgUrl: "http://%s/system/captcha/image/%s.png"
+
+# Directory Locations
+dirLocations:
+  conf: "./conf"
+  www: "./www"
+  temp: "./temp"
+  log: "./logs"
+  cache: "./caches"
+
+# Connectors
+connectors:
+  covid19:
+    covid19who:
+      code: who
+      name: Covid19 WHO Official Website
+      server: "https://covid19.who.int"
+      enable: true
+    covid19goid:
+      code: covid19goid
+      name: Covid19 Indonesia Official Website
+      server: "https://data.covid19.go.id"
+      enable: true
+
+# SMTP Servers
+SMTPServers:
+  defaultSMTP:
+    server: "smtp.gmail.com"
+    port: "587"
+    username: "email@gmail.com"
+    password: "password"
+    sender: "no-reply@gmail.com"
+
+# OpenAPIDefinition
+openAPIDefinition:
+  info:
+    title: "DDD Technical Architecture Patterns: REST API"
+    description: "A Simple Implementation of `Domain-Driven Design Technical Architecture Patterns` in Golang"
+    termsOfService: https://github.com/muharihar/d3la-go
+    contact:
+      name: Muhammad Hari
+      url: https://github.com/muharihar
+      email: hi.muhammad.hari@gmail.com
+    license:
+      name: MIT
+      url: https://github.com/muharihar/d3la-go
+    version: 1.0.0

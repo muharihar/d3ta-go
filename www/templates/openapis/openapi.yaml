@@ -1,0 +1,499 @@
+openapi: "3.0.3"
+
+info:
+  title: '{{index . "info.Title"}}'
+  description: '{{index . "info.Description"}}'
+  contact:
+    name: '{{index . "info.Contact.Name"}}'
+    url: '{{index . "info.Contact.URL"}}'
+    email: '{{index . "info.Contact.Email"}}'
+  license:
+    name: '{{index . "info.License.Name"}}'
+    url: '{{index . "info.License.URL"}}'
+  version: '{{index . "info.Version"}}'
+
+servers:
+  - url: '{scheme}://{host}'
+    description: Server
+    variables:
+      scheme:
+        description: The API is accessible via https and http
+        enum:
+          - https
+          - http
+        default: http
+      host:
+        default: '{{index . "server.URL.Host.Default"}}'
+
+tags:
+  - name: Systems
+    description: >-
+      [Generic (sub)Domain] Systems
+  - name: Auths
+    description: >-
+      [Generic (sub)Domain] Authentication (using DDD layered architecture, [G]ORM)
+  - name: GeoLocation
+    description: >-
+      [Supporting (sub)Domain] Geo Location Data (using Simple CRUD with [G]ORM)
+  - name: Covid19
+    description: >-
+      [Core (sub)Domain] Covid19 (using DDD layered architecture, adapter-connector)
+  
+security:
+  - bearerAuth: []
+
+paths:
+  # Heatlh Check
+  /system/health:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.CheckHealth
+      summary: System Health Check
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  /system/captcha/generate:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.Captcha.Generate
+      summary: System Generate Captcha
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  /system/captcha/image/{captchaID}:
+    get:
+      tags:
+        - Systems
+      security: []
+      operationId: Systems.Captcha.GenerateImage
+      summary: System Generate Captcha Image
+      parameters:
+        - in: path
+          name: captchaID
+          description: >-
+            captchaID (with extension: `.png`)
+          schema:
+            type: string
+          required: true
+          example: mv14bg7coWkbp9JtnQCb.png
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+        
+  # Auths
+  /api/v1/auths/register:
+    post:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.Register
+      summary: User Registration
+      requestBody:
+        $ref: '#/components/requestBodies/auths.Register.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/auths/registration/activate/{activationCode}/{format}:
+    get:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.ActivateRegistration
+      summary: Activate Registration
+      parameters:
+        - in: path
+          name: activationCode
+          description: >-
+            Activation Code (from register process)
+          schema:
+            type: string
+          required: true
+          example: "adhad-adlkajdandad-aldkjadjal-adkad"
+        - in: path
+          name: format
+          description: >-
+            Dispay Format
+          schema:
+            type: string
+            enum:
+              - json
+              - html
+            default: json
+          required: true
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/auths/login:
+    post:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.Login
+      summary: User Login (local user)
+      requestBody:
+        $ref: '#/components/requestBodies/auths.Login.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/auths/login-app:
+    post:
+      tags:
+        - Auths
+      security: []
+      operationId: Auths.LoginApp
+      summary: Client Login App (local user)
+      requestBody:
+        $ref: '#/components/requestBodies/auths.LoginApp.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  # GeoLocation
+  /api/v1/geolocation/country/list-all:
+    get:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.ListALl
+      summary: Display Country List
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/geolocation/country:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Add
+      summary: Add Country
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.Add.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/geolocation/country/{code}:
+    get:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.GetDetail
+      summary: Get Detail Country
+      parameters:
+        - in: path
+          name: code
+          description: >-
+            Country Code (example: ID)
+          schema:
+            type: string
+          required: true
+          example: ID
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+    put:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Update
+      summary: Update Country
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.Update.Request'
+      parameters:
+        - in: path
+          name: code
+          description: >-
+            Country Code (example: ID)
+          schema:
+            type: string
+          required: true
+          example: ID
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+    delete:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.Delete
+      summary: Delete Country
+      parameters:
+        - in: path
+          name: code
+          description: >-
+            Country Code (example: ID)
+          schema:
+            type: string
+          required: true
+          example: ID
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  # Covid19
+  /api/v1/covid19/current/by-country:
+    post:
+      tags:
+        - Covid19
+      operationId: covid19.Current.ByCountry
+      summary: Display Current Data By Coundtry
+      requestBody:
+        $ref: '#/components/requestBodies/covid19.Current.ByCountry.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  requestBodies:
+    auths.Register.Request:
+      description: User Registration 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/auths.Register.Request'
+          examples:
+            Registration:
+              value:
+                username: "admin.d3tago"
+                password: "P4s$W0rd!@!"
+                email: "user.d3tago@email.tld"
+                nickName: "Hari"
+                captcha: "get-captcha/Value"
+                captchaID: "get-geptcha/ID"
+    
+    auths.Login.Request:
+      description: User Login 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/auths.Login.Request'
+          examples:
+            Registration:
+              value:
+                username: "admin.d3tago"
+                password: "P4s$W0rd!@!"
+                captcha: "get-captcha/Value"
+                captchaID: "get-geptcha/ID"
+    
+    auths.LoginApp.Request:
+      description: Client Login App 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/auths.LoginApp.Request'
+          examples:
+            Registration:
+              value:
+                clientKey: "clientKey"
+                secretKey: "secretkey"
+
+    covid19.Current.ByCountry.Request:
+      description: Display Covid19 Current Data By Country Requst 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/covid19.Current.ByCountry.Request'
+          examples:
+            WHO.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: WHO
+            Covid19GoId.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: COVID19GOID
+            ALL.Default:
+              value:
+                countryCode: ID
+                providers:
+                  - code: _DEFAULT_
+            ALL.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: _ALL_
+  
+    geoLocation.Country.Add.Request:
+      description: Add Geolocation Country
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.Add.Request'
+          examples:
+            Detail:
+              value:
+                code: ID
+                name: INDONESIA
+                ISO2Code: ID
+                ISO3Code: IDN
+                WHORegion: SEARO
+            Simple:
+              value:
+                code: ID
+                name: INDONESIA
+                ISO2Code: ID
+                ISO3Code: 
+                WHORegion: SEARO
+    
+    geoLocation.Country.Update.Request:
+      description: Update Geolocation Country
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.Update.Request'
+          examples:
+            Detail:
+              value:
+                name: INDONESIA UPDATED
+                ISO2Code: ID
+                ISO3Code: IDN
+                WHORegion: SEARO
+            Simple:
+              value:
+                name: INDONESIA UPDATED
+                ISO2Code: ID
+                ISO3Code: 
+                WHORegion: SEARO
+  
+  responses:
+    GeneralResponse:
+      description: General Response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GeneralResponse'
+
+  schemas:
+    GeneralResponse:
+      required:
+        - status
+        - response
+        - serverInfo
+      properties:
+        status:
+          type: string
+          enum:
+            - OK
+            - ERROR
+          example: OK
+        response:
+          type: object
+        serverInfo:
+          type: object
+
+    auths.Register.Request:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "user.d3tago"
+        password:
+          type: string
+          example: "P4s$W0rd!@!"
+        email:
+          type: string
+          format: email
+          example: "user.d3tago@email.tld"
+        nickName:
+          type: string
+          example: "Hari"
+        captcha:
+          type: string
+          example: 1234
+        captchaID:
+          type: string
+          example: "adao293aoadh39uekha"
+
+    auths.Login.Request:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "user.d3tago"
+        password:
+          type: string
+          example: "P4s$W0rd!@!"
+        captcha:
+          type: string
+          example: 1234
+        captchaID:
+          type: string
+          example: "adao293aoadh39uekha"
+    
+    auths.LoginApp.Request:
+      type: object
+      properties:
+        clientKey:
+          type: string
+          example: "clientKey"
+        secretKey:
+          type: string
+          example: "secretKey"
+
+    geoLocation.Country.Add.Request:
+      type: object
+      properties:
+        code:
+          type: string
+          example: ID
+        name:
+          type: string
+          example: INDONESIA
+        ISO2Code:
+          type: string
+          example: ID
+        ISO3Code:
+          type: string
+          example: IDN
+        WHORegion:
+          type: string
+          example: SEARO
+
+    geoLocation.Country.Update.Request:
+      type: object
+      properties:
+        name:
+          type: string
+          example: INDONESIA UPDATED
+        ISO2Code:
+          type: string
+          example: ID
+        ISO3Code:
+          type: string
+          example: IDN
+        WHORegion:
+          type: string
+          example: SEARO
+    
+    covid19.Current.ByCountry.Request:
+      type: object
+      properties:
+        countryCode:
+          type: string
+          example: ID
+        providers:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                example: _ALL_

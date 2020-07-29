@@ -13,3 +13,16 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# development
+temp-air
+.air.conf
+
+# application
+caches/
+conf/config.yaml
+dist/
+logs/
+temp/
+.env
+d3ta-go
