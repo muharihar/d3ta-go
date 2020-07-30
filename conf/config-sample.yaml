@@ -8,7 +8,7 @@ applications:
     showEngineHeader: true
     displayOpenAPI: true
     listener:
-      port: 1234
+      port: 2020
 
 # Databases
 databases:
