@@ -8,7 +8,6 @@ import (
 
 	domEntity "github.com/muharihar/d3ta-go/modules/auths/la/domain/entity"
 	domRepo "github.com/muharihar/d3ta-go/modules/auths/la/domain/repository"
-	"github.com/muharihar/d3ta-go/modules/auths/la/domain/schema"
 	domSchema "github.com/muharihar/d3ta-go/modules/auths/la/domain/schema"
 	"github.com/muharihar/d3ta-go/modules/auths/la/infrastructure/template"
 	sysError "github.com/muharihar/d3ta-go/system/error"
@@ -210,7 +209,7 @@ func (r *AuthenticationRepo) Login(req *domSchema.LoginRequest, i identity.Ident
 }
 
 // LoginApp login app
-func (r *AuthenticationRepo) LoginApp(req *schema.LoginAppRequest, i identity.Identity) (*schema.LoginAppResponse, error) {
+func (r *AuthenticationRepo) LoginApp(req *domSchema.LoginAppRequest, i identity.Identity) (*domSchema.LoginAppResponse, error) {
 	// select db
 	dbCon, err := r.handler.GetGormDB(r.dbConnectionName)
 	if err != nil {
