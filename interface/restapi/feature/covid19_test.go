@@ -1,52 +1,14 @@
 package feature
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/fsnotify/fsnotify"
 	"github.com/labstack/echo/v4"
-	"github.com/muharihar/d3ta-go/system/config"
-	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/stretchr/testify/assert"
 )
-
-func newConfig(h *handler.Handler) (*config.Config, error) {
-	configPath := "../../../conf"
-
-	//init config
-	cfg, viper, err := config.NewConfig(configPath)
-	if err != nil {
-		panic(err)
-	}
-	h.SetConfig(cfg)
-
-	viper.OnConfigChange(func(e fsnotify.Event) {
-		c := new(config.Config)
-		if err := viper.Unmarshal(&c); err != nil {
-			fmt.Println(err)
-		}
-		h.SetConfig(c)
-	})
-
-	return cfg, nil
-}
-
-func newHandler() *handler.Handler {
-
-	h, _ := handler.NewHandler()
-
-	// init configuration
-	_, err := newConfig(h)
-	if err != nil {
-		panic(err)
-	}
-
-	return h
-}
 
 func TestFCovid19_DisplayCurrentDataByCountry(t *testing.T) {
 	// variables

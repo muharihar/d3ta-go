@@ -71,4 +71,5 @@ func SetRouters(e *echo.Echo, h *handler.Handler) {
 	router.SetAuths(ga, features.Auths)
 	router.SetCovid19(ga, features.Covid19)
 	router.SetGeoLocation(ga, features.GeoLocation)
+	router.SetEmail(ga, features.Email)
 }

@@ -24,9 +24,6 @@ func initConfig(h *handler.Handler) (*config.Config, error) {
 		panic(err)
 	}
 	h.SetConfig(cfg)
-	if err := initialize.LoadAllDatabase(h); err != nil {
-		panic(err)
-	}
 
 	viper.OnConfigChange(func(e fsnotify.Event) {
 		// fmt.Println("config file changed:", e.Name)
@@ -43,6 +40,12 @@ func initConfig(h *handler.Handler) (*config.Config, error) {
 }
 
 func initializeSystems(h *handler.Handler) error {
+
+	// initialize database
+	if err := initialize.LoadAllDatabase(h); err != nil {
+		panic(err)
+	}
+
 	return nil
 }
 

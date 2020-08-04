@@ -29,6 +29,10 @@ func NewFeature(h *handler.Handler) (*Feature, error) {
 		return nil, err
 	}
 
+	if f.Email, err = NewFEmail(h); err != nil {
+		return nil, err
+	}
+
 	return f, nil
 }
 
@@ -41,4 +45,5 @@ type Feature struct {
 	Auths       *FAuths
 	Covid19     *FCovid19
 	GeoLocation *FGeoLocation
+	Email       *FEmail
 }

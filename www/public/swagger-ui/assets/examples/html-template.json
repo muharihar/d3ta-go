@@ -1,0 +1,9 @@
+{
+    "code": "html-email-template-code",
+    "name": "HTML Email Template Name",
+    "isActive": true,
+    "template": {
+        "subjectTpl": "Subject Template",
+        "bodyTpl": "{{define \"T\"}}<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html>\r\n\t</head>\r\n\t<body>\r\n\t\t<p>\r\n\t\t\tDear {{index . \"Header.Name\"}}, \r\n\t\t</p>\r\n\t\t<p>\r\n\t\t\tVelit consequat pariatur nisi anim. Enim mollit mollit officia voluptate eiusmod tempor dolor proident aliqua officia occaecat dolor.\r\n\t\t\t<strong>Laboris consequat ex eu ad et tempor tempor ullamco sunt est.</strong>\r\n\t\t\tAliquip sunt cillum aute exercitation nisi non. Ad quis adipisicing voluptate laboris est elit duis. \r\n\t\t\tNostrud fugiat enim qui qui incididunt irure. Et elit laborum aliquip ullamco enim veniam aliqua ad veniam do ipsum.\r\n\t\t</p>\r\n\t\t<p>\r\n\t\t\t<a href=\"{{index . \"Body.URL\"}}\">Eiusmod fugiat sunt elit deserunt sint labore ut dolor sint enim.</a>\r\n\t\t</p>\r\n\t\t<p>\r\n\t\t\tRegards, \r\n\t\t</p>\r\n\t\t<p>\r\n\t\t\t{{index . \"Footer.Signature\"}}\r\n\t\t</p>\r\n\t</body>\r\n</html>\r\n{{end}}"
+    }
+}

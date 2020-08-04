@@ -35,6 +35,9 @@ tags:
   - name: GeoLocation
     description: >-
       [Supporting (sub)Domain] Geo Location Data (using Simple CRUD with [G]ORM)
+  - name: Email
+    description: >-
+      [Generic (sub)Domain] Email (using DDD layered architecture, [G]ORM, smtp)
   - name: Covid19
     description: >-
       [Core (sub)Domain] Covid19 (using DDD layered architecture, adapter-connector)
@@ -43,7 +46,7 @@ security:
   - bearerAuth: []
 
 paths:
-  # Heatlh Check
+  # System
   /system/health:
     get:
       tags:
@@ -72,14 +75,7 @@ paths:
       operationId: Systems.Captcha.GenerateImage
       summary: System Generate Captcha Image
       parameters:
-        - in: path
-          name: captchaID
-          description: >-
-            captchaID (with extension: `.png`)
-          schema:
-            type: string
-          required: true
-          example: mv14bg7coWkbp9JtnQCb.png
+        - $ref: '#/components/parameters/system.param.captchaID'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
@@ -106,25 +102,8 @@ paths:
       operationId: Auths.ActivateRegistration
       summary: Activate Registration
       parameters:
-        - in: path
-          name: activationCode
-          description: >-
-            Activation Code (from register process)
-          schema:
-            type: string
-          required: true
-          example: "adhad-adlkajdandad-aldkjadjal-adkad"
-        - in: path
-          name: format
-          description: >-
-            Dispay Format
-          schema:
-            type: string
-            enum:
-              - json
-              - html
-            default: json
-          required: true
+        - $ref: '#/components/parameters/auths.param.regActivationCode'
+        - $ref: '#/components/parameters/auths.param.reqActivationFormat'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
@@ -185,14 +164,7 @@ paths:
       operationId: GeoLocation.Country.GetDetail
       summary: Get Detail Country
       parameters:
-        - in: path
-          name: code
-          description: >-
-            Country Code (example: ID)
-          schema:
-            type: string
-          required: true
-          example: ID
+        - $ref: '#/components/parameters/geoLocation.param.countryCode'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
@@ -204,14 +176,7 @@ paths:
       requestBody:
         $ref: '#/components/requestBodies/geoLocation.Country.Update.Request'
       parameters:
-        - in: path
-          name: code
-          description: >-
-            Country Code (example: ID)
-          schema:
-            type: string
-          required: true
-          example: ID
+        - $ref: '#/components/parameters/geoLocation.param.countryCode'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
@@ -221,14 +186,92 @@ paths:
       operationId: GeoLocation.Country.Delete
       summary: Delete Country
       parameters:
-        - in: path
-          name: code
-          description: >-
-            Country Code (example: ID)
-          schema:
-            type: string
-          required: true
-          example: ID
+        - $ref: '#/components/parameters/geoLocation.param.countryCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  # Email
+  /api/v1/email/send:
+    post:
+      tags:
+        - Email
+      operationId: email.Send
+      summary: Send Email using template
+      requestBody:
+        $ref: '#/components/requestBodies/email.Send.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/email/templates/list-all:
+    get:
+      tags:
+        - Email
+      operationId: email.Template.ListAll
+      summary: List All Email Template
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template:
+    post:
+      tags:
+        - Email
+      operationId: email.Template.Create
+      summary: Create new Email Template
+      requestBody:
+        $ref: '#/components/requestBodies/email.Template.Create.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template/{code}:
+    get:
+      tags:
+        - Email
+      operationId: email.Template.FindByCode
+      summary: Find Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+    delete:
+      tags:
+        - Email
+      operationId: email.Template.Delete
+      summary: Delete Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template/update/{code}:
+    put:
+      tags:
+        - Email
+      operationId: email.Template.Update
+      summary: Update Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      requestBody:
+        $ref: '#/components/requestBodies/email.Template.Update.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/email/template/set-active/{code}:
+    put:
+      tags:
+        - Email
+      operationId: email.Template.SetActive
+      summary: Set Active Email Template by Code
+      parameters:
+        - $ref: '#/components/parameters/email.param.emailTemplateCode'
+      requestBody:
+        $ref: '#/components/requestBodies/email.Template.SetActive.Request'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
@@ -239,22 +282,83 @@ paths:
       tags:
         - Covid19
       operationId: covid19.Current.ByCountry
-      summary: Display Current Data By Coundtry
+      summary: Display Current Data By Country
       requestBody:
         $ref: '#/components/requestBodies/covid19.Current.ByCountry.Request'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
-  
-components:
 
+components:
+  #SecuritySchemes
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  
+  # Parameters
+  parameters:
+    # System
+    system.param.captchaID:
+      in: path
+      name: captchaID
+      description: >-
+        captchaID (with extension: `.png`)
+      schema:
+        type: string
+      required: true
+      example: mv14bg7coWkbp9JtnQCb.png
+    
+    # Auths
+    auths.param.regActivationCode:
+      in: path
+      name: activationCode
+      description: >-
+        Activation Code (from register process)
+      schema:
+        type: string
+      required: true
+      example: "adhad-adlkajdandad-aldkjadjal-adkad"
+    
+    auths.param.reqActivationFormat:
+      in: path
+      name: format
+      description: >-
+        Dispay Format
+      schema:
+        type: string
+        enum:
+          - json
+          - html
+        default: json
+      required: true
 
+    # GeoLocation
+    geoLocation.param.countryCode:
+      in: path
+      name: code
+      description: >-
+        Country Code (example: ID)
+      schema:
+        type: string
+      required: true
+      example: ID
+    
+    # Emails
+    email.param.emailTemplateCode:
+      in: path
+      name: code
+      description: >-
+        Email Template Code
+      schema:
+        type: string
+      required: true
+      example: activate-registration
+
+  # Request Bodies
   requestBodies:
+    # Auths
     auths.Register.Request:
       description: User Registration 
       required: true
@@ -299,36 +403,8 @@ components:
               value:
                 clientKey: "clientKey"
                 secretKey: "secretkey"
-
-    covid19.Current.ByCountry.Request:
-      description: Display Covid19 Current Data By Country Requst 
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/covid19.Current.ByCountry.Request'
-          examples:
-            WHO.Provider:
-              value:
-                countryCode: ID
-                providers:
-                  - code: WHO
-            Covid19GoId.Provider:
-              value:
-                countryCode: ID
-                providers:
-                  - code: COVID19GOID
-            ALL.Default:
-              value:
-                countryCode: ID
-                providers:
-                  - code: _DEFAULT_
-            ALL.Provider:
-              value:
-                countryCode: ID
-                providers:
-                  - code: _ALL_
   
+    # GeoLocation
     geoLocation.Country.Add.Request:
       description: Add Geolocation Country
       required: true
@@ -372,7 +448,188 @@ components:
                 ISO2Code: ID
                 ISO3Code: 
                 WHORegion: SEARO
-  
+    
+    # Email
+    email.Template.Create.Request:
+      description: Create Email Template Request
+      required: true
+      content:
+        application/json:
+          schema:
+             $ref: '#/components/schemas/email.Template.Create.Request'
+          examples:
+            PlainTextSample:
+              value:
+                code: "plain-email-template-code"
+                name: "Plain Text Email Template Name"
+                isActive: true
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/plain-text-template.json"
+            HTMLSample:
+              value:
+                code: "html-email-template-code"
+                name: "HTML Email Template Name"
+                isActive: true
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/html-template.json"
+    
+    email.Template.Update.Request:
+      description: Update Email Template Request
+      required: true
+      content:
+        application/json:
+          schema:
+             $ref: '#/components/schemas/email.Template.Update.Request'
+          examples:
+            PlainTextSample:
+              value:
+                name: "Plain Text Email Template Name"
+                isActive: true
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/plain-text-template.json"
+            HTMLSample:
+              value:
+                name: "HTML Email Template Name"
+                isActive: true
+                template:
+                  subjectTpl: "Subject Template"
+                  bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/html-template.json"
+    
+    email.Template.SetActive.Request:
+      description: Set Active Email Template Request
+      required: true
+      content:
+        application/json:
+          schema:
+             $ref: '#/components/schemas/email.Template.SetActive.Request'
+          examples:
+            Activate:
+              value:
+                isActive: true
+            InActivate:
+              value:
+                isActive: false
+
+    email.Send.Request:
+      description: Send Email
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/email.Send.Request'
+          examples:
+            Simple:
+              value:
+                templateCode: test.code
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3ta.to@domain.tld
+                  name: D3TA Golang To
+                templateData:
+                  Header.Name: Name
+                  Body.URL: https://google.com
+                  Footer.Signature: Customer Service
+            WithCC:
+              value:
+                templateCode: test.code
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3tago.to@domain.tld
+                  name: D3TA Golang To
+                cc:
+                  - email: d3tago.cc1@domain.tld
+                    name: D3TA Golang CC 1
+                  - email: d3tago.cc2@gmail.tld
+                    name: D3TA Golang CC 2
+                templateData:
+                  Header.Name: Name
+                  Body.URL: https://google.com
+                  Footer.Signature: Customer Service
+            WithBCC:
+              value:
+                templateCode: test.code
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3tago.to@domain.tld
+                  name: D3TA Golang To
+                bcc:
+                  - email: d3tago.bcc1@domain.tld
+                    name: D3TA Golang BCC 1
+                  - email: d3tago.bcc2@gmail.tld
+                    name: D3TA Golang BCC 2
+                templateData:
+                  Header.Name: Name
+                  Body.URL: https://google.com
+                  Footer.Signature: Customer Service
+            WithCCAndBCC:
+              value:
+                templateCode: test.code
+                from:
+                  email: d3tago.from@domain.tld
+                  name: D3TA Golang
+                to:
+                  email: d3tago.to@domain.tld
+                  name: D3TA Golang To
+                cc:
+                  - email: d3tago.cc1@domain.tld
+                    name: D3TA Golang CC 1
+                  - email: d3tago.cc2@gmail.tld
+                    name: D3TA Golang CC 2
+                bcc:
+                  - email: d3tago.bcc1@domain.tld
+                    name: D3TA Golang BCC 1
+                  - email: d3tago.bcc2@gmail.tld
+                    name: D3TA Golang BCC 2
+                templateData:
+                  Header.Name: Name
+                  Body.URL: https://google.com
+                  Footer.Signature: Customer Service
+
+    # Covid19  
+    covid19.Current.ByCountry.Request:
+      description: Display Covid19 Current Data By Country Requst 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/covid19.Current.ByCountry.Request'
+          examples:
+            WHO.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: WHO
+            Covid19GoId.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: COVID19GOID
+            WHOAndCovid19GoId.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: WHO
+                  - code: COVID19GOID
+            ALL.Default:
+              value:
+                countryCode: ID
+                providers:
+                  - code: _DEFAULT_
+            ALL.Provider:
+              value:
+                countryCode: ID
+                providers:
+                  - code: _ALL_
+
   responses:
     GeneralResponse:
       description: General Response
@@ -381,6 +638,7 @@ components:
           schema:
             $ref: '#/components/schemas/GeneralResponse'
 
+  # Schemas
   schemas:
     GeneralResponse:
       required:
@@ -399,101 +657,223 @@ components:
         serverInfo:
           type: object
 
+    # Auths
     auths.Register.Request:
       type: object
       properties:
         username:
-          type: string
-          example: "user.d3tago"
+          $ref: '#/components/schemas/auths.field.username'
         password:
-          type: string
-          example: "P4s$W0rd!@!"
+          $ref: '#/components/schemas/auths.field.password'
         email:
-          type: string
-          format: email
-          example: "user.d3tago@email.tld"
+          $ref: '#/components/schemas/auths.field.email'
         nickName:
-          type: string
-          example: "Hari"
+          $ref: '#/components/schemas/auths.field.nickName'
         captcha:
-          type: string
-          example: 1234
+          $ref: '#/components/schemas/auths.field.captcha'
         captchaID:
-          type: string
-          example: "adao293aoadh39uekha"
+          $ref: '#/components/schemas/auths.field.captchaID'
 
     auths.Login.Request:
       type: object
       properties:
         username:
-          type: string
-          example: "user.d3tago"
+          $ref: '#/components/schemas/auths.field.username'
         password:
-          type: string
-          example: "P4s$W0rd!@!"
+          $ref: '#/components/schemas/auths.field.password'
         captcha:
-          type: string
-          example: 1234
+          $ref: '#/components/schemas/auths.field.captcha'
         captchaID:
-          type: string
-          example: "adao293aoadh39uekha"
+          $ref: '#/components/schemas/auths.field.captchaID'
     
     auths.LoginApp.Request:
       type: object
       properties:
         clientKey:
-          type: string
-          example: "clientKey"
+          $ref: '#/components/schemas/auths.field.clientKey'
         secretKey:
-          type: string
-          example: "secretKey"
+          $ref: '#/components/schemas/auths.field.secretKey'
+    
+    auths.field.username:
+      type: string
+      example: "user.d3tago"
+    auths.field.password:
+      type: string
+      example: "P4s$W0rd!@!"
+    auths.field.email:
+      type: string
+      format: email
+      example: "user.d3tago@email.tld"
+    auths.field.nickName:
+      type: string
+      example: "Hari"
+    
+    auths.field.captcha:
+      type: string
+      example: 1234
+    auths.field.captchaID:
+      type: string
+      example: "adao293aoadh39uekha"
 
+    auths.field.clientKey:
+      type: string
+      example: "clientKey"
+    auths.field.secretKey:
+      type: string
+      example: "clientKey"
+
+    # GeoLocation
     geoLocation.Country.Add.Request:
       type: object
       properties:
         code:
-          type: string
-          example: ID
+          $ref: '#/components/schemas/geoLocation.field.country.code'
         name:
-          type: string
-          example: INDONESIA
+          $ref: '#/components/schemas/geoLocation.field.country.name'
         ISO2Code:
-          type: string
-          example: ID
+          $ref: '#/components/schemas/geoLocation.field.country.ISO2Code'
         ISO3Code:
-          type: string
-          example: IDN
+          $ref: '#/components/schemas/geoLocation.field.country.ISO3Code'
         WHORegion:
-          type: string
-          example: SEARO
+          $ref: '#/components/schemas/geoLocation.field.country.WHORegion'
 
     geoLocation.Country.Update.Request:
       type: object
       properties:
         name:
-          type: string
-          example: INDONESIA UPDATED
+          $ref: '#/components/schemas/geoLocation.field.country.name'
         ISO2Code:
-          type: string
-          example: ID
+          $ref: '#/components/schemas/geoLocation.field.country.ISO2Code'
         ISO3Code:
-          type: string
-          example: IDN
+          $ref: '#/components/schemas/geoLocation.field.country.ISO3Code'
         WHORegion:
-          type: string
-          example: SEARO
+          $ref: '#/components/schemas/geoLocation.field.country.WHORegion'
     
+    geoLocation.field.country.code:
+      type: string
+      example: ID
+    geoLocation.field.country.name:
+      type: string
+      example: INDONESIA
+    geoLocation.field.country.ISO2Code:
+      type: string
+      example: ID
+    geoLocation.field.country.ISO3Code:
+      type: string
+      example: IDN
+    geoLocation.field.country.WHORegion:
+      type: string
+      example: SEARO
+    
+    # Email
+    email.Template.Create.Request:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/email.Template.field.code'
+        name:
+          $ref: '#/components/schemas/email.Template.field.name'
+        isActive:
+          $ref: '#/components/schemas/email.Template.field.isActive'
+        template:
+          $ref: '#/components/schemas/email.Template.obj.template'
+
+    email.Template.Update.Request:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/email.Template.field.name'
+        isActive:
+          $ref: '#/components/schemas/email.Template.field.isActive'
+        template:
+          $ref: '#/components/schemas/email.Template.obj.template'
+
+    email.Template.SetActive.Request:
+      type: object
+      properties:
+        isActive:
+          $ref: '#/components/schemas/email.Template.field.isActive'
+    
+    email.Template.field.code:
+      type: string
+      example: email-template-code
+    email.Template.field.name:
+      type: string
+      example: Email Template
+    email.Template.field.isActive:
+      type: boolean
+      example: true
+    
+    email.Template.obj.template:
+      type: object
+      properties:
+        subjectTpl:
+          $ref: '#/components/schemas/email.Template.field.subjectTpl'
+        bodyTpl:
+          $ref: '#/components/schemas/email.Template.field.bodyTpl'
+    
+    email.Template.field.subjectTpl:
+      type: string
+      example: Email Subject
+    email.Template.field.bodyTpl:
+      type: string
+      example: Please refer to examples url
+    
+    email.Send.Request:
+      type: object
+      properties:
+        templateCode:
+          $ref: '#/components/schemas/email.Template.field.code'
+        from:
+          $ref: '#/components/schemas/email.send.obj.emailAddress'
+        to:
+          $ref: '#/components/schemas/email.send.obj.emailAddress'
+        cc:
+          $ref: '#/components/schemas/email.send.arr.emailAddress'
+        bcc:
+          $ref: '#/components/schemas/email.send.arr.emailAddress'
+        templateData:
+          type: object
+          description: >- 
+            Template Data (depend on email template)
+    
+    email.send.arr.emailAddress:
+      type: array
+      items:
+        $ref: '#/components/schemas/email.send.obj.emailAddress'
+    
+    email.send.obj.emailAddress:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/email.send.field.email'
+        name:
+          $ref: '#/components/schemas/email.send.field.name'
+          
+    email.send.field.email:
+      type: string
+      format: email
+    email.send.field.name:
+      type: string
+    
+    # Covid19
     covid19.Current.ByCountry.Request:
       type: object
       properties:
         countryCode:
-          type: string
-          example: ID
+          $ref: '#/components/schemas/geoLocation.field.country.code'
         providers:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-                example: _ALL_
+          $ref: '#/components/schemas/covid19.arr.provider'
+    
+    covid19.arr.provider:
+      type: array
+      items:
+        $ref: '#/components/schemas/covid19.obj.provider'
+    covid19.obj.provider:
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/covid19.provider.field.code'
+    covid19.provider.field.code:
+      type: string
+      example: _ALL_

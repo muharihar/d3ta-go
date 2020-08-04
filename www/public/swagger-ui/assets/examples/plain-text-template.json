@@ -1,0 +1,9 @@
+{
+    "code": "plain-email-template-code",
+    "name": "Plain Text Email Template Name",
+    "isActive": true,
+    "template": {
+        "subjectTpl": "Subject Template",
+        "bodyTpl": "{{define \"T\"}} Dear, {{index. \"Header.Name\"}}\nNulla consectetur esse cupidatat elit aliquip in cillum qui ea consectetur.  Aute ea sunt duis duis nostrud consectetur quis.  Consectetur dolor enim irure aliqua aute mollit ad.\n{{index. \"Body.Data\"}}\nAnim fugiat est nostrud nulla aute nostrud culpa ex minim. Minim ipsum amet dolor ut velit dolor aute quis voluptate.  Cillum excepteur sint elit sunt anim quis do dolor magna laborum do eu.  Laborum pariatur dolore incididunt aliquip duis nostrud id voluptate laborum ut.  Proident minim culpa velit fugiat Lorem ipsum do ullamco occaecat velit voluptate.  Quis laborum in elit incididunt ea duis ad reprehenderit nulla.\nRegards,\n\n{{index. \"Footer.Signature\"}} {{end}}"
+    }
+}
