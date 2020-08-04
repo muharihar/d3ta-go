@@ -131,3 +131,13 @@ func (j *JWT) CreateCustomClaims(ID uint64, UUID, username, nickName, authorityI
 		},
 	}
 }
+
+// GenerateSystemToken generate system (identity) token
+func (j *JWT) GenerateSystemToken() (c *JWTCustomClaims, token string, expiredAt int64, err error) {
+
+	claims := j.CreateCustomClaims(SystemID, SystemUUID, SystemUserName, SystemNickName, SystemAuthorityID)
+
+	token, expiredAt, err = j.GenerateToken(claims)
+
+	return &claims, token, expiredAt, err
+}
