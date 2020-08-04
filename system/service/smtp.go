@@ -36,15 +36,51 @@ type SMTPSender struct {
 	sender   string
 }
 
+type EmailFormat string
+
+const (
+	HTMLEmail EmailFormat = "HTML"
+	TEXTEmail EmailFormat = "TEXT"
+)
+
 // SendEmail send email using SMTP
 func (s *SMTPSender) SendEmail(toEmail string, subject string, body string) error {
-	subjectBody := fmt.Sprintf("Subject: %s\n\n %s", subject, body)
+	mime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
+	msg := []byte("To: " + toEmail + "\n" +
+		"Subject: " + subject + "\n" + mime + "\n" + body)
 
 	auth := smtp.PlainAuth("", s.username, s.password, s.server)
-	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, []string{toEmail}, []byte(subjectBody))
+	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, []string{toEmail}, msg)
 	if err != nil {
 		return fmt.Errorf("Error from SMTP Server: %s", err.Error())
 	}
 
+	return nil
+}
+
+// SendEmails send emails with specific format/type
+func (s *SMTPSender) SendEmails(toEmails []string, hFromEmail string, hToEmail string, hCcEmail string, hBccEmail string, subject string, body string, format EmailFormat) error {
+	mime := ""
+	switch format {
+	case HTMLEmail:
+		mime = "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	case TEXTEmail:
+		mime = "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
+	default:
+		mime = "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
+	}
+
+	msg := []byte("From: " + hFromEmail + "\n" +
+		"To: " + hToEmail + "\n" +
+		"Cc: " + hCcEmail + "\n" +
+		"Bcc: " + hBccEmail + "\n" +
+		"Subject: " + subject + "\n" + mime + "\n" + body)
+
+	auth := smtp.PlainAuth("", s.username, s.password, s.server)
+	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, toEmails, msg)
+
+	if err != nil {
+		return fmt.Errorf("Error from SMTP Server: %s", err.Error())
+	}
 	return nil
 }
