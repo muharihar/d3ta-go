@@ -54,7 +54,7 @@ func (ms01 *MS0103CreateAndInitCasbin) Run(db *gorm.DB) error {
 
 	cPs := []IamCasbinRule{
 		// role:admin - geolocation.country
-		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/country/list-all", V2: "GET"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/countries/list-all", V2: "GET"},
 		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/country", V2: "POST"},
 		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/country/*", V2: "GET"},
 		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/country/*", V2: "PUT"},
@@ -63,7 +63,7 @@ func (ms01 *MS0103CreateAndInitCasbin) Run(db *gorm.DB) error {
 		{PType: "p", V0: "role:admin", V1: "/api/v1/covid19/current/by-country", V2: "POST"},
 
 		// role:default - geolocation.country
-		{PType: "p", V0: "role:default", V1: "/api/v1/geolocation/country/list-all", V2: "GET"},
+		{PType: "p", V0: "role:default", V1: "/api/v1/geolocation/countries/list-all", V2: "GET"},
 		{PType: "p", V0: "role:default", V1: "/api/v1/geolocation/country/*", V2: "GET"},
 		// role:default - covid19
 		{PType: "p", V0: "role:default", V1: "/api/v1/covid19/current/by-country", V2: "POST"},

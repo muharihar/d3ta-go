@@ -16,7 +16,7 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 	// Setup
 	e := echo.New()
 
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/geolocation/country/list-all", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/geolocation/countries/list-all", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	res := httptest.NewRecorder()
 

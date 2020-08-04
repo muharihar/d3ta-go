@@ -156,7 +156,7 @@ paths:
           $ref: '#/components/responses/GeneralResponse'
   
   # GeoLocation
-  /api/v1/geolocation/country/list-all:
+  /api/v1/geolocation/countries/list-all:
     get:
       tags:
         - GeoLocation

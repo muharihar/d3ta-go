@@ -67,7 +67,7 @@ func TestCountrySvc_ListAll(t *testing.T) {
 	}
 
 	i := newIdentity(h, t)
-	i.RequestInfo.RequestObject = "/api/v1/geolocation/country/list-all"
+	i.RequestInfo.RequestObject = "/api/v1/geolocation/countries/list-all"
 	i.RequestInfo.RequestAction = "GET"
 
 	resp, err := cSvc.ListAll(i)
