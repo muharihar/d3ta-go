@@ -48,6 +48,18 @@ databases:
     maxIdleConns: 10
     maxOpenConns: 10
     logMode: true # shoud be "false" on production
+  emailDB:
+    connectionName: "db-email"
+    driver: "mysql" # mysql, postgres, sqlserver, sqlite3
+    # mysql
+    username: "d3ta"
+    password: "d3ta"
+    hostName: "127.0.0.1:3306" # hostname:port OR path
+    dbName: "a_d3ta_email"
+    config: "charset=utf8&parseTime=True&loc=Local"
+    maxIdleConns: 10
+    maxOpenConns: 10
+    logMode: true # shoud be "false" on production
 
 # IAM
 IAM:
