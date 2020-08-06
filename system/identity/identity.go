@@ -6,9 +6,12 @@ import (
 
 	"github.com/casbin/casbin/v2"
 	"github.com/labstack/echo/v4"
+	"github.com/muharihar/d3ta-go/system/context"
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/service"
 )
+
+// Identity is subject to be refactored
 
 // TokenType type
 type TokenType string
@@ -99,6 +102,20 @@ func (i *Identity) initContextInformation() {
 			RemoteAddr:    c.Request().RemoteAddr,
 			RequestObject: c.Request().RequestURI,
 			RequestAction: c.Request().Method,
+		}
+	case "*context.Ctx":
+		c := i.ctx.(*context.Ctx)
+
+		i.ClientDevices = ClientDevices{
+			UserAgent: c.Request().UserAgent(),
+			IPAddress: c.RealIP(),
+		}
+
+		i.RequestInfo = RequestInfo{
+			Host:          c.Request().HostName(),
+			RemoteAddr:    c.Request().RemoteAddr(),
+			RequestObject: c.Request().RequestURI(),
+			RequestAction: c.Request().Method(),
 		}
 	default:
 		i.ClientDevices = ClientDevices{
