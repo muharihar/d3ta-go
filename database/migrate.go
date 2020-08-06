@@ -10,7 +10,7 @@ import (
 
 // RunDBMigrate run DBMigrate
 func RunDBMigrate() {
-	fmt.Println("RunDBMigrate...\n")
+	fmt.Println("RunDBMigrate...")
 
 	h, err := handler.NewHandler()
 	if err != nil {
@@ -31,7 +31,7 @@ func RunDBMigrate() {
 	}
 
 	// Migration
-	fmt.Println("Run::M01FirstInstall...\n")
+	fmt.Println("\nRun::M01FirstInstall...")
 	if err := M01FirstInstall(h); err != nil {
 		fmt.Println("Error: ", err.Error())
 		return
