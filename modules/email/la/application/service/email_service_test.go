@@ -58,6 +58,7 @@ func TestEmailService_Send(t *testing.T) {
 		"Body.ActivationURL": "https://google.com",
 		"Footer.Name":        "Customer Service",
 	}
+	req.ProcessingType = "ASYNC"
 
 	i := newIdentity(h, t)
 	i.RequestInfo.RequestObject = "/api/v1/email/send"

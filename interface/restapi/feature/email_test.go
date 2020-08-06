@@ -293,7 +293,7 @@ func TestEmail_DeleteEmailTemplate(t *testing.T) {
 func TestEmail_SendEmail(t *testing.T) {
 	// client request
 	reqDTO := `{
-    "templateCode": "test.code",
+    "templateCode": "activate-registration-html",
     "from": { "email": "d3tago.from@domain.tld", "name": "D3TA Golang" },
     "to": { "email": "d3tago.test@outlook.com", "name": "D3TAgo Test (Outlook)" },
     "cc": [
@@ -305,10 +305,12 @@ func TestEmail_SendEmail(t *testing.T) {
 		{ "email": "d3tago.test.bcc@outlook.com", "name": "D3TAgo Test BCC 2 (Outlook)" }
     ],
     "templateData": {
-		"Header.Name": "Name",
-		"Body.URL": "https://google.com",
-        "Footer.Signature": "Customer Service"
-    }
+		"Header.Name": "John Doe",
+		"Body.UserAccount": "john.doe",
+		"Body.ActivationURL": "https://google.com",
+        "Footer.Name": "Customer Service"
+	},
+	"processingType": "SYNC"
 }`
 
 	// setup echo

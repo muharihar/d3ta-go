@@ -539,6 +539,7 @@ components:
                   Body.UserAccount: john.doe
                   Body.ActivationURL: https://google.com
                   Footer.Name: Customer Service
+                processingType: SYNC
             WithCC:
               value:
                 templateCode: activate-registration-html
@@ -558,6 +559,7 @@ components:
                   Body.UserAccount: john.doe
                   Body.ActivationURL: https://google.com
                   Footer.Name: Customer Service
+                processingType: SYNC
             WithBCC:
               value:
                 templateCode: activate-registration-html
@@ -577,6 +579,7 @@ components:
                   Body.UserAccount: john.doe
                   Body.ActivationURL: https://google.com
                   Footer.Name: Customer Service
+                processingType: ASYNC
             WithCCAndBCC:
               value:
                 templateCode: activate-registration-html
@@ -601,6 +604,7 @@ components:
                   Body.UserAccount: john.doe
                   Body.ActivationURL: https://google.com
                   Footer.Name: Customer Service
+                processingType: ASYNC
 
     # Covid19  
     covid19.Current.ByCountry.Request:
@@ -852,6 +856,8 @@ components:
           type: object
           description: >- 
             Template Data (depend on email template)
+        processingType:
+          $ref: '#/components/schemas/email.send.field.processingType'
     
     email.send.arr.emailAddress:
       type: array
@@ -871,6 +877,12 @@ components:
       format: email
     email.send.field.name:
       type: string
+    email.send.field.processingType:
+      type: string
+      enum:
+        - SYNC
+        - ASYNC
+      description: Processing Type [ SYNC (Synchronous) or ASYNC (Asyncrounous) ]
     
     # Covid19
     covid19.Current.ByCountry.Request:

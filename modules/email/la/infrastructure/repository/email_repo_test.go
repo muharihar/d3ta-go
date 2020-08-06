@@ -41,9 +41,10 @@ func TestEMailRepo_Send(t *testing.T) {
 	}
 
 	req := &schema.SendEmailRequest{
-		TemplateCode: "test.code",
-		From:         &schema.MailAddress{Email: "d3tago.from@domain.tld", Name: "D3TA Golang"},
-		To:           &schema.MailAddress{Email: "d3tago.test@outlook.com", Name: "D3TAgo Test (Outlook)"},
+		TemplateCode: "activate-registration-html",
+		// TemplateCode: "account-activation-html"
+		From: &schema.MailAddress{Email: "d3tago.from@domain.tld", Name: "D3TA Golang"},
+		To:   &schema.MailAddress{Email: "d3tago.test@outlook.com", Name: "D3TAgo Test (Outlook)"},
 		CC: []*schema.MailAddress{
 			{Email: "d3tago.test@protonmail.com", Name: "D3TAgo Test CC 1 (Protonmail)"},
 			{Email: "d3tago.test.cc@tutanota.com", Name: "D3TAgo Test CC 2 (Tutanota)"}},
@@ -51,13 +52,16 @@ func TestEMailRepo_Send(t *testing.T) {
 			{Email: "d3tago.test@tutanota.com", Name: "D3TAgo Test BCC 1 (Tutanota)"},
 			{Email: "d3tago.test.bcc@outlook.com", Name: "D3TAgo Test BCC 2 (Outlook)"}},
 		TemplateData: map[string]interface{}{
-			"Header.Name":      "Name",
-			"Body.URL":         "https://google.com",
-			"Footer.Signature": "Customer Service",
+			"Header.Name":        "John Doe",
+			"Body.UserAccount":   "john.doe",
+			"Body.ActivationURL": "https://google.com",
+			"Footer.Name":        "Customer Service",
 		},
+		ProcessingType: "SYNC",
 		Template: &domSchemaET.ETFindByCodeData{
 			EmailTemplate: domSchemaET.EmailTemplate{
-				ID: 1,
+				ID:          1,
+				EmailFormat: "HTML",
 			},
 			DefaultTemplateVersion: domSchemaET.EmailTemplateVersion{
 				SubjectTpl: "Subject Email Template",

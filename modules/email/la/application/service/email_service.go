@@ -51,12 +51,13 @@ func (s *EmailService) Send(req *appDTO.SendEmailReqDTO, i identity.Identity) (*
 
 	// request domain
 	reqDom := domSchema.SendEmailRequest{
-		TemplateCode: req.TemplateCode,
-		From:         req.From,
-		To:           req.To,
-		CC:           req.CC,
-		BCC:          req.BCC,
-		TemplateData: req.TemplateData,
+		TemplateCode:   req.TemplateCode,
+		From:           req.From,
+		To:             req.To,
+		CC:             req.CC,
+		BCC:            req.BCC,
+		TemplateData:   req.TemplateData,
+		ProcessingType: req.ProcessingType,
 	}
 
 	if err := reqDom.Validate(); err != nil {

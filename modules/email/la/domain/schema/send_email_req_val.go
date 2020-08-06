@@ -1,17 +1,21 @@
 package schema
 
 import (
+	"fmt"
+
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	valIs "github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
 // Validate SendEmailRequest
 func (r *SendEmailRequest) Validate() error {
+	fmt.Println("ProcessingType: ", r.ProcessingType)
 	return validation.ValidateStruct(r,
 		validation.Field(&r.TemplateCode, validation.Required),
 		validation.Field(&r.From, validation.Required),
 		validation.Field(&r.To, validation.Required),
 		validation.Field(&r.TemplateData, validation.Required),
+		validation.Field(&r.ProcessingType, validation.Required, validation.In("SYNC", "ASYNC")),
 	)
 }
 

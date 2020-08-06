@@ -56,11 +56,15 @@ func (r *EmailRepo) Send(req *domSchema.SendEmailRequest, i identity.Identity) (
 		return nil, err
 	}
 
-	// send email async
-	// go r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail), service.EmailFormat(req.Template.EmailFormat))
-	// time.Sleep(100 * time.Millisecond)
-	if err := r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail), service.EmailFormat(req.Template.EmailFormat)); err != nil {
-		return nil, err
+	// send email depend on processing type : SYNC/ASYNC
+	processingStatus := req.ProcessingType
+	if domSchema.ProcessingType(req.ProcessingType) == domSchema.SYNCProcess {
+		if err := r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail), service.EmailFormat(req.Template.EmailFormat)); err != nil {
+			return nil, err
+		}
+	} else {
+		go r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail), service.EmailFormat(req.Template.EmailFormat))
+		// time.Sleep(100 * time.Millisecond)
 	}
 
 	// save email to db
@@ -75,7 +79,7 @@ func (r *EmailRepo) Send(req *domSchema.SendEmailRequest, i identity.Identity) (
 		BCC:        r.compileEmail(req.BCC),
 		Subject:    subjEmail,
 		Body:       bodyEmail,
-		Status:     "SENT.SYNC",
+		Status:     fmt.Sprintf("SENT.%s", processingStatus),
 	}
 	emailEtt.SentBy = i.Claims.Username
 	emailEtt.CreatedBy = fmt.Sprintf("%s@%s", i.Claims.Username, i.ClientDevices.IPAddress)
@@ -90,7 +94,7 @@ func (r *EmailRepo) Send(req *domSchema.SendEmailRequest, i identity.Identity) (
 	// response
 	resp := new(domSchema.SendEmailResponse)
 	resp.TemplateCode = req.TemplateCode
-	resp.Status = "SENT.SYNC"
+	resp.Status = emailEtt.Status
 
 	return resp, nil
 }
