@@ -47,7 +47,7 @@ const (
 func (s *SMTPSender) SendEmail(toEmail string, subject string, body string) error {
 	mime := "MIME-version: 1.0;\nContent-Type: text/plain; charset=\"UTF-8\";\n\n"
 	msg := []byte("To: " + toEmail + "\n" +
-		"Subject: " + subject + "\n" + mime + "\n" + body)
+		"Subject: " + subject + "\n" + mime + body)
 
 	auth := smtp.PlainAuth("", s.username, s.password, s.server)
 	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, []string{toEmail}, msg)
@@ -74,7 +74,7 @@ func (s *SMTPSender) SendEmails(toEmails []string, hFromEmail string, hToEmail s
 		"To: " + hToEmail + "\n" +
 		"Cc: " + hCcEmail + "\n" +
 		"Bcc: " + hBccEmail + "\n" +
-		"Subject: " + subject + "\n" + mime + "\n" + body)
+		"Subject: " + subject + "\n" + mime + body)
 
 	auth := smtp.PlainAuth("", s.username, s.password, s.server)
 	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, toEmails, msg)
