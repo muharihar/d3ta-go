@@ -58,5 +58,25 @@ func M01FirstInstall(h *handler.Handler) error {
 		}
 	}
 
+	// Email (EmailDB)
+	emailDB, err := h.GetGormDB(cfg.Databases.EmailDB.ConnectionName)
+	if err != nil {
+		return err
+	}
+	emailMig := NewMigration(emailDB)
+
+	// Create Structure
+	if err := emailMig.Run(migrations.NewMS0301CreateStructureEmail(h)); err != nil {
+		if err := emailMig.Rollback(migrations.NewMS0301CreateStructureEmail(h)); err != nil {
+			return err
+		}
+	}
+	// Seed Data
+	if err := emailMig.Run(migrations.NewMS0301SeedDataEmail(h)); err != nil {
+		if err := emailMig.Rollback(migrations.NewMS0301SeedDataEmail(h)); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

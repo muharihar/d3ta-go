@@ -53,6 +53,19 @@ func (ms01 *MS0103CreateAndInitCasbin) Run(db *gorm.DB) error {
 	}
 
 	cPs := []IamCasbinRule{
+		// role:system - email
+		{PType: "p", V0: "role:system", V1: "system.module.email.send", V2: "EXECUTE"},
+		{PType: "p", V0: "role:system", V1: "system.module.email.template.findbycode", V2: "READ"},
+
+		// role:admin - email
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/send", V2: "POST"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/templates/list-all", V2: "GET"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/template", V2: "POST"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/template/*", V2: "GET"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/template/update/*", V2: "PUT"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/template/set-active/*", V2: "PUT"},
+		{PType: "p", V0: "role:admin", V1: "/api/v1/email/template/*", V2: "DELETE"},
+
 		// role:admin - geolocation.country
 		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/countries/list-all", V2: "GET"},
 		{PType: "p", V0: "role:admin", V1: "/api/v1/geolocation/country", V2: "POST"},
@@ -69,6 +82,7 @@ func (ms01 *MS0103CreateAndInitCasbin) Run(db *gorm.DB) error {
 		{PType: "p", V0: "role:default", V1: "/api/v1/covid19/current/by-country", V2: "POST"},
 
 		// group -> role (for flexibility)
+		{PType: "g", V0: "group:system", V1: "role:system"},
 		{PType: "g", V0: "group:admin", V1: "role:admin"},
 		{PType: "g", V0: "group:default", V1: "role:default"},
 	}
