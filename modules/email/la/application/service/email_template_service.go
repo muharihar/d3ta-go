@@ -18,6 +18,9 @@ func NewEmailTemplateService(h *handler.Handler) (*EmailTemplateService, error) 
 
 	svc := new(EmailTemplateService)
 	svc.handler = h
+	if err := svc.initBaseService(); err != nil {
+		return nil, err
+	}
 
 	if svc.repo, err = infRepo.NewEmailTemplateRepo(h); err != nil {
 		return nil, err
@@ -97,10 +100,11 @@ func (s *EmailTemplateService) Create(req *appDTO.ETCreateReqDTO, i identity.Ide
 
 	// request domain
 	reqDom := domSchema.ETCreateRequest{
-		Code:     req.Code,
-		Name:     req.Name,
-		IsActive: req.IsActive,
-		Template: req.Template,
+		Code:        req.Code,
+		Name:        req.Name,
+		IsActive:    req.IsActive,
+		EmailFormat: req.EmailFormat,
+		Template:    req.Template,
 	}
 
 	if err := reqDom.Validate(); err != nil {
@@ -135,9 +139,10 @@ func (s *EmailTemplateService) Update(req *appDTO.ETUpdateReqDTO, i identity.Ide
 			Code: req.Keys.Code,
 		},
 		Data: &domSchema.ETUpdateData{
-			Name:     req.Data.Name,
-			IsActive: req.Data.IsActive,
-			Template: req.Data.Template,
+			Name:        req.Data.Name,
+			IsActive:    req.Data.IsActive,
+			EmailFormat: req.Data.EmailFormat,
+			Template:    req.Data.Template,
 		},
 	}
 

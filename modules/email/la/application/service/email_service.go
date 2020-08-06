@@ -19,6 +19,9 @@ func NewEmailService(h *handler.Handler) (*EmailService, error) {
 
 	svc := new(EmailService)
 	svc.handler = h
+	if err := svc.initBaseService(); err != nil {
+		return nil, err
+	}
 
 	if svc.repoEmailTpl, err = infRepo.NewEmailTemplateRepo(h); err != nil {
 		return nil, err
@@ -65,7 +68,7 @@ func (s *EmailService) Send(req *appDTO.SendEmailReqDTO, i identity.Identity) (*
 	reqET := domSchemaET.ETFindByCodeRequest{
 		Code: req.TemplateCode,
 	}
-	tpl, err := s.repoEmailTpl.FindByCode(&reqET, i)
+	tpl, err := s.repoEmailTpl.FindByCode(&reqET, s.systemIdentity)
 	if err != nil {
 		return nil, err
 	}

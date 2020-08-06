@@ -13,9 +13,10 @@ type ETUpdateKeys struct {
 
 // ETUpdateData type
 type ETUpdateData struct {
-	Name     string           `json:"name"`
-	IsActive bool             `json:"isActive"`
-	Template *ETUpdateVersion `json:"template"`
+	Name        string           `json:"name"`
+	IsActive    bool             `json:"isActive"`
+	EmailFormat string           `json:"emailFormat"`
+	Template    *ETUpdateVersion `json:"template"`
 }
 
 // ETUpdateVersion type

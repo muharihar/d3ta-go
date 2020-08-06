@@ -89,9 +89,10 @@ func TestEMailTemplateRepo_Create(t *testing.T) {
 	}
 
 	req := &schema.ETCreateRequest{
-		Code:     "test.code.02",
-		Name:     "Template Name 02",
-		IsActive: true,
+		Code:        "test.code.02",
+		Name:        "Template Name 02",
+		IsActive:    true,
+		EmailFormat: "TEXT",
 		Template: &schema.ETCreateVersion{
 			SubjectTpl: "Subject Template",
 			BodyTpl:    `{{define "T"}}Body Template{{end}}`,
@@ -128,8 +129,9 @@ func TestEMailTemplateRepo_Update(t *testing.T) {
 			Code: "test.code.02",
 		},
 		Data: &schema.ETUpdateData{
-			Name:     "Template Name 02 Updated",
-			IsActive: true,
+			Name:        "Template Name 02 Updated",
+			IsActive:    true,
+			EmailFormat: "TEXT",
 			Template: &schema.ETUpdateVersion{
 				SubjectTpl: "Subject Template Updated",
 				BodyTpl:    `{{define "T"}}Body Template Updated{{end}}`,

@@ -42,7 +42,8 @@ func TestEmailService_Send(t *testing.T) {
 	}
 
 	req := new(appDTO.SendEmailReqDTO)
-	req.TemplateCode = "test.code"
+	req.TemplateCode = "activate-registration-html"
+	// req.TemplateCode = "account-activation-html"
 	req.From = &domSchema.MailAddress{Email: "d3tago.from@domain.tld", Name: "D3TA Golang"}
 	req.To = &domSchema.MailAddress{Email: "d3tago.test@outlook.com", Name: "D3TAgo Test (Outlook)"}
 	req.CC = []*domSchema.MailAddress{
@@ -52,9 +53,10 @@ func TestEmailService_Send(t *testing.T) {
 		{Email: "d3tago.test@tutanota.com", Name: "D3TAgo Test BCC 1 (Tutanota)"},
 		{Email: "d3tago.test.bcc@outlook.com", Name: "D3TAgo Test BCC 2 (Outlook)"}}
 	req.TemplateData = map[string]interface{}{
-		"Header.Name":      "Name",
-		"Body.URL":         "https://google.com",
-		"Footer.Signature": "Customer Service",
+		"Header.Name":        "John Doe",
+		"Body.UserAccount":   "john.doe",
+		"Body.ActivationURL": "https://google.com",
+		"Footer.Name":        "Customer Service",
 	}
 
 	i := newIdentity(h, t)

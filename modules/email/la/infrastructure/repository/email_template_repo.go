@@ -60,6 +60,7 @@ func (r *EmailTemplateRepo) ListAll(i identity.Identity) (*domSchema.ETListAllRe
 		tmp.Code = rec.Code
 		tmp.Name = rec.Name
 		tmp.IsActive = rec.IsActive
+		tmp.EmailFormat = rec.EmailFormat
 		tmp.DefaultVersionID = rec.DefaultVersionID
 
 		listET = append(listET, tmp)
@@ -104,6 +105,7 @@ func (r *EmailTemplateRepo) FindByCode(req *domSchema.ETFindByCodeRequest, i ide
 		Code:             emailTplVersionEtt.EmailTemplate.Code,
 		Name:             emailTplVersionEtt.EmailTemplate.Name,
 		IsActive:         emailTplVersionEtt.EmailTemplate.IsActive,
+		EmailFormat:      emailTplVersionEtt.EmailTemplate.EmailFormat,
 		DefaultVersionID: emailTplVersionEtt.EmailTemplate.DefaultVersionID,
 	}
 	dtv := domSchema.EmailTemplateVersion{
@@ -145,10 +147,11 @@ func (r *EmailTemplateRepo) Create(req *domSchema.ETCreateRequest, i identity.Id
 
 	// create email template
 	emailTplEtt := domEntity.EmailTemplate{
-		UUID:     utils.GenerateUUID(),
-		Code:     req.Code,
-		Name:     req.Name,
-		IsActive: req.IsActive,
+		UUID:        utils.GenerateUUID(),
+		Code:        req.Code,
+		Name:        req.Name,
+		EmailFormat: req.EmailFormat,
+		IsActive:    req.IsActive,
 	}
 	emailTplEtt.CreatedBy = fmt.Sprintf("%s@%s", i.Claims.Username, i.ClientDevices.IPAddress)
 
@@ -163,7 +166,7 @@ func (r *EmailTemplateRepo) Create(req *domSchema.ETCreateRequest, i identity.Id
 
 	// create email template version
 	emailTplVerEtt := domEntity.EmailTemplateVersion{
-		Version:         r.genSemVersion(""),
+		Version:         utils.GenSemVersion(""),
 		SubjectTpl:      req.Template.SubjectTpl,
 		BodyTpl:         req.Template.BodyTpl,
 		EmailTemplateID: emailTplEtt.ID,
@@ -249,7 +252,7 @@ func (r *EmailTemplateRepo) Update(req *domSchema.ETUpdateRequest, i identity.Id
 
 	// create new version
 	newEmailTplVerEtt := domEntity.EmailTemplateVersion{
-		Version:         r.genSemVersion(lastVersion),
+		Version:         utils.GenSemVersion(lastVersion),
 		SubjectTpl:      req.Data.Template.SubjectTpl,
 		BodyTpl:         req.Data.Template.BodyTpl,
 		EmailTemplateID: emailTplVersionEtt.EmailTemplateID,
@@ -268,6 +271,7 @@ func (r *EmailTemplateRepo) Update(req *domSchema.ETUpdateRequest, i identity.Id
 	emailTplVersionEtt.EmailTemplate.Name = req.Data.Name
 	emailTplVersionEtt.EmailTemplate.IsActive = req.Data.IsActive
 	emailTplVersionEtt.EmailTemplate.DefaultVersionID = newEmailTplVerEtt.ID
+	emailTplVersionEtt.EmailTemplate.EmailFormat = req.Data.EmailFormat
 	emailTplVersionEtt.EmailTemplate.UpdatedBy = fmt.Sprintf("%s@%s", i.Claims.Username, i.ClientDevices.IPAddress)
 
 	if err := tx.Save(&emailTplVersionEtt.EmailTemplate).Error; err != nil {
@@ -405,40 +409,11 @@ func (r *EmailTemplateRepo) Delete(req *domSchema.ETDeleteRequest, i identity.Id
 			Code:             emailTplEtt.Code,
 			Name:             emailTplEtt.Name,
 			IsActive:         emailTplEtt.IsActive,
+			EmailFormat:      emailTplEtt.EmailFormat,
 			DefaultVersionID: emailTplEtt.DefaultVersionID,
 		},
 		VersionCount: countV,
 	}
 
 	return resp, nil
-}
-
-// genSemVersion generate semversion
-func (r *EmailTemplateRepo) genSemVersion(v string) string {
-	if v == "" {
-		v = "1.0.0"
-	} else {
-		ver, err := semver.Parse(v)
-		if err != nil {
-			ver, _ = semver.Parse("1.0.0")
-		}
-		// we use 1.10.10
-		if ver.Patch < 9 {
-			ver.Patch = ver.Patch + 1
-		} else {
-			if ver.Minor < 9 {
-				ver.Minor = ver.Minor + 1
-				ver.Patch = 0
-			} else {
-				if ver.Major < 9 {
-					ver.Major = ver.Major + 1
-					ver.Minor = 0
-					ver.Patch = 0
-				}
-			}
-		}
-		v = fmt.Sprintf("%v", ver)
-	}
-
-	return v
 }

@@ -13,6 +13,7 @@ func newConfig(t *testing.T) (*config.Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	c.IAM.Casbin.ModelPath = "../../../../../conf/casbin/casbin_rbac_rest_model.conf"
 	return c, nil
 }
 
@@ -23,7 +24,11 @@ func newIdentity(h *handler.Handler, t *testing.T) identity.Identity {
 	if err != nil {
 		t.Errorf("NewIdentity: %s", err.Error())
 	}
-	if err := i.SetCasbinEnforcer("../../../../../conf/casbin/casbin_rbac_rest_model.conf"); err != nil {
+	cfg, err := h.GetConfig()
+	if err != nil {
+		t.Errorf("GetConfig: %s", err.Error())
+	}
+	if err := i.SetCasbinEnforcer(cfg.IAM.Casbin.ModelPath); err != nil {
 		t.Errorf("SetCasbinEnforcer: %s", err.Error())
 	}
 

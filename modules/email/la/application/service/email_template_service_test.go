@@ -92,6 +92,7 @@ func TestEmailTemplateService_Create(t *testing.T) {
 	req.Code = "test.code.03"
 	req.Name = "Template Name 03"
 	req.IsActive = true
+	req.EmailFormat = "TEXT"
 	req.Template = &domSchema.ETCreateVersion{
 		SubjectTpl: "Subject Template",
 		BodyTpl:    `{{define "T"}}Body Template{{end}}`,
@@ -127,6 +128,7 @@ func TestEmailTemplateService_Update(t *testing.T) {
 	req.Data = new(appDTO.ETUpdateDataDTO)
 	req.Data.Name = "Template Name 03 Updated"
 	req.Data.IsActive = true
+	req.Data.EmailFormat = "TEXT"
 	req.Data.Template = &domSchema.ETUpdateVersion{
 		SubjectTpl: "Subject Template Updated",
 		BodyTpl:    `{{define "T"}}Body Template Updated{{end}}`,

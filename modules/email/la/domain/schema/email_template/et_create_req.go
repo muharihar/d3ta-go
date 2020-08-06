@@ -2,10 +2,11 @@ package emailtemplate
 
 // ETCreateRequest type
 type ETCreateRequest struct {
-	Code     string           `json:"code"`
-	Name     string           `json:"name"`
-	IsActive bool             `json:"isActive"`
-	Template *ETCreateVersion `json:"template"`
+	Code        string           `json:"code"`
+	Name        string           `json:"name"`
+	IsActive    bool             `json:"isActive"`
+	EmailFormat string           `json:"emailFormat"`
+	Template    *ETCreateVersion `json:"template"`
 }
 
 // ETCreateVersion type

@@ -7,6 +7,7 @@ type EmailTemplate struct {
 	Code             string `json:"code"`
 	Name             string `json:"name"`
 	IsActive         bool   `json:"isActive"`
+	EmailFormat      string `json:"emailFormat"`
 	DefaultVersionID uint64 `json:"defaultVersionID"`
 }
 

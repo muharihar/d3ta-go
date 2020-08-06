@@ -23,6 +23,7 @@ func (r *ETUpdateKeys) Validate() error {
 func (r *ETUpdateData) Validate() error {
 	return validation.ValidateStruct(r,
 		validation.Field(&r.Name, validation.Required),
+		validation.Field(&r.EmailFormat, validation.In("TEXT", "HTML"), validation.Required),
 		validation.Field(&r.IsActive, validation.NotNil),
 	)
 }

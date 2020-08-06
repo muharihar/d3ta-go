@@ -463,6 +463,7 @@ components:
                 code: "plain-email-template-code"
                 name: "Plain Text Email Template Name"
                 isActive: true
+                emailFormat: "TEXT"
                 template:
                   subjectTpl: "Subject Template"
                   bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/plain-text-template.json"
@@ -471,6 +472,7 @@ components:
                 code: "html-email-template-code"
                 name: "HTML Email Template Name"
                 isActive: true
+                emailFormat: "HTML"
                 template:
                   subjectTpl: "Subject Template"
                   bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/html-template.json"
@@ -487,6 +489,7 @@ components:
               value:
                 name: "Plain Text Email Template Name"
                 isActive: true
+                emailFormat: "TEXT"
                 template:
                   subjectTpl: "Subject Template"
                   bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/plain-text-template.json"
@@ -494,6 +497,7 @@ components:
               value:
                 name: "HTML Email Template Name"
                 isActive: true
+                emailFormat: "HTML"
                 template:
                   subjectTpl: "Subject Template"
                   bodyTpl: "replace bodyTpl value from: http://{{index . "server.URL.Host.Default"}}/openapi/docs/swagger-ui/assets/examples/html-template.json"
@@ -523,7 +527,7 @@ components:
           examples:
             Simple:
               value:
-                templateCode: test.code
+                templateCode: activate-registration-html
                 from:
                   email: d3tago.from@domain.tld
                   name: D3TA Golang
@@ -531,12 +535,13 @@ components:
                   email: d3ta.to@domain.tld
                   name: D3TA Golang To
                 templateData:
-                  Header.Name: Name
-                  Body.URL: https://google.com
-                  Footer.Signature: Customer Service
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
             WithCC:
               value:
-                templateCode: test.code
+                templateCode: activate-registration-html
                 from:
                   email: d3tago.from@domain.tld
                   name: D3TA Golang
@@ -549,12 +554,13 @@ components:
                   - email: d3tago.cc2@gmail.tld
                     name: D3TA Golang CC 2
                 templateData:
-                  Header.Name: Name
-                  Body.URL: https://google.com
-                  Footer.Signature: Customer Service
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
             WithBCC:
               value:
-                templateCode: test.code
+                templateCode: activate-registration-html
                 from:
                   email: d3tago.from@domain.tld
                   name: D3TA Golang
@@ -567,12 +573,13 @@ components:
                   - email: d3tago.bcc2@gmail.tld
                     name: D3TA Golang BCC 2
                 templateData:
-                  Header.Name: Name
-                  Body.URL: https://google.com
-                  Footer.Signature: Customer Service
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
             WithCCAndBCC:
               value:
-                templateCode: test.code
+                templateCode: activate-registration-html
                 from:
                   email: d3tago.from@domain.tld
                   name: D3TA Golang
@@ -590,9 +597,10 @@ components:
                   - email: d3tago.bcc2@gmail.tld
                     name: D3TA Golang BCC 2
                 templateData:
-                  Header.Name: Name
-                  Body.URL: https://google.com
-                  Footer.Signature: Customer Service
+                  Header.Name: John Doe
+                  Body.UserAccount: john.doe
+                  Body.ActivationURL: https://google.com
+                  Footer.Name: Customer Service
 
     # Covid19  
     covid19.Current.ByCountry.Request:
@@ -775,6 +783,8 @@ components:
           $ref: '#/components/schemas/email.Template.field.name'
         isActive:
           $ref: '#/components/schemas/email.Template.field.isActive'
+        emailFormat:
+          $ref: '#/components/schemas/email.Template.field.emailFormat'
         template:
           $ref: '#/components/schemas/email.Template.obj.template'
 
@@ -785,6 +795,8 @@ components:
           $ref: '#/components/schemas/email.Template.field.name'
         isActive:
           $ref: '#/components/schemas/email.Template.field.isActive'
+        emailFormat:
+          $ref: '#/components/schemas/email.Template.field.emailFormat'
         template:
           $ref: '#/components/schemas/email.Template.obj.template'
 
@@ -803,7 +815,11 @@ components:
     email.Template.field.isActive:
       type: boolean
       example: true
-    
+    email.Template.field.emailFormat:
+      type: string
+      enum:
+        - HTML
+        - TEXT
     email.Template.obj.template:
       type: object
       properties:

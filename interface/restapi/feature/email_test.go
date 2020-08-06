@@ -103,6 +103,7 @@ func TestEmail_CreateEmailTemplate(t *testing.T) {
 	"code": "test.code.04",
 	"name": "Template Name 04",
 	"isActive": true,
+	"emailFormat": "TEXT",
 	"template": {
 		"subjectTpl": "Subject Template 04",
 		"bodyTpl": "{{define \"T\"}}Body Template 04{{end}}"
@@ -152,6 +153,7 @@ func TestEmail_UpdateEmailTemplate(t *testing.T) {
 	reqDTO := `{
 	"name": "Template Name 04 Updated",
 	"isActive": true,
+	"emailFormat": "TEXT",
 	"template": {
 		"subjectTpl": "Subject Template 04 Updated",
 		"bodyTpl": "{{define \"T\"}}Body Template 04 Updated{{end}}"

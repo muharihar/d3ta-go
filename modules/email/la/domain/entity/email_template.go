@@ -8,8 +8,8 @@ type EmailTemplate struct {
 	Code             string `json:"code" gorm:"column:code;size:100;unique;not null" sql:"index"`
 	Name             string `json:"name" gorm:"column:name;size:255;not null"`
 	IsActive         bool   `json:"isActive" gorm:"column:is_active;index" sql:"index"`
+	EmailFormat      string `json:"emailFormat" gorm:"column:email_format;size:10;not null"`
 	DefaultVersionID uint64 `json:"defaultVersionID" gorm:"column:default_version_id;not null"`
-
 	BaseEntity
 }
 

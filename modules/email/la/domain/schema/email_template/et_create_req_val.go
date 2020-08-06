@@ -7,9 +7,10 @@ import (
 // Validate ETCreateRequest
 func (r *ETCreateRequest) Validate() error {
 	return validation.ValidateStruct(r,
-		validation.Field(&r.Code, validation.Length(10, 100), validation.Required),
+		validation.Field(&r.Code, validation.Required, validation.Length(10, 100)),
 		validation.Field(&r.Name, validation.Required),
 		validation.Field(&r.IsActive, validation.NotNil),
+		validation.Field(&r.EmailFormat, validation.Required, validation.In("TEXT", "HTML")),
 		validation.Field(&r.Template, validation.Required),
 	)
 }
@@ -17,7 +18,7 @@ func (r *ETCreateRequest) Validate() error {
 // Validate ETCreateVersion
 func (r *ETCreateVersion) Validate() error {
 	return validation.ValidateStruct(r,
-		validation.Field(&r.SubjectTpl, validation.Length(10, 255), validation.Required),
-		validation.Field(&r.BodyTpl, validation.Length(10, 20000), validation.Required),
+		validation.Field(&r.SubjectTpl, validation.Required, validation.Length(10, 255)),
+		validation.Field(&r.BodyTpl, validation.Required, validation.Length(10, 20000)),
 	)
 }

@@ -57,9 +57,9 @@ func (r *EmailRepo) Send(req *domSchema.SendEmailRequest, i identity.Identity) (
 	}
 
 	// send email async
-	// go r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail))
+	// go r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail), service.EmailFormat(req.Template.EmailFormat))
 	// time.Sleep(100 * time.Millisecond)
-	if err := r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail)); err != nil {
+	if err := r.sendEmails(req.From, req.To, req.CC, req.BCC, subjEmail, string(bodyEmail), service.EmailFormat(req.Template.EmailFormat)); err != nil {
 		return nil, err
 	}
 
@@ -121,7 +121,7 @@ func (r *EmailRepo) compileEmailBody(tpl string, data map[string]interface{}) ([
 	return buf.Bytes(), nil
 }
 
-func (r *EmailRepo) sendEmails(fromEmail *domSchema.MailAddress, toEmail *domSchema.MailAddress, cc []*domSchema.MailAddress, bcc []*domSchema.MailAddress, subject string, body string) error {
+func (r *EmailRepo) sendEmails(fromEmail *domSchema.MailAddress, toEmail *domSchema.MailAddress, cc []*domSchema.MailAddress, bcc []*domSchema.MailAddress, subject string, body string, format service.EmailFormat) error {
 	var toEmails []string
 	toEmails = append(toEmails, toEmail.Email)
 	for _, e := range cc {
@@ -136,7 +136,7 @@ func (r *EmailRepo) sendEmails(fromEmail *domSchema.MailAddress, toEmail *domSch
 	hCc := r.compileEmail(cc)
 	hBcc := r.compileEmail(bcc)
 
-	err := r.smtp.SendEmails(toEmails, hFrom, hTo, hCc, hBcc, subject, body, service.HTMLEmail)
+	err := r.smtp.SendEmails(toEmails, hFrom, hTo, hCc, hBcc, subject, body, format)
 	if err != nil {
 		return err
 	}
