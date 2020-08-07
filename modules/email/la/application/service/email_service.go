@@ -52,10 +52,10 @@ func (s *EmailService) Send(req *appDTO.SendEmailReqDTO, i identity.Identity) (*
 	// request domain
 	reqDom := domSchema.SendEmailRequest{
 		TemplateCode:   req.TemplateCode,
-		From:           req.From,
-		To:             req.To,
-		CC:             req.CC,
-		BCC:            req.BCC,
+		From:           &domSchema.MailAddress{Email: req.From.Email, Name: req.From.Name},
+		To:             &domSchema.MailAddress{Email: req.To.Email, Name: req.To.Name},
+		CC:             req.ConvertCC2Domain(),
+		BCC:            req.ConvertBCC2Domain(),
 		TemplateData:   req.TemplateData,
 		ProcessingType: req.ProcessingType,
 	}

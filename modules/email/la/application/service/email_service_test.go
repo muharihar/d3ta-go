@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	appDTO "github.com/muharihar/d3ta-go/modules/email/la/application/dto"
-	domSchema "github.com/muharihar/d3ta-go/modules/email/la/domain/schema"
 
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/initialize"
@@ -44,12 +43,12 @@ func TestEmailService_Send(t *testing.T) {
 	req := new(appDTO.SendEmailReqDTO)
 	req.TemplateCode = "activate-registration-html"
 	// req.TemplateCode = "account-activation-html"
-	req.From = &domSchema.MailAddress{Email: "d3tago.from@domain.tld", Name: "D3TA Golang"}
-	req.To = &domSchema.MailAddress{Email: "d3tago.test@outlook.com", Name: "D3TAgo Test (Outlook)"}
-	req.CC = []*domSchema.MailAddress{
+	req.From = &appDTO.MailAddressDTO{Email: "d3tago.from@domain.tld", Name: "D3TA Golang"}
+	req.To = &appDTO.MailAddressDTO{Email: "d3tago.test@outlook.com", Name: "D3TAgo Test (Outlook)"}
+	req.CC = []*appDTO.MailAddressDTO{
 		{Email: "d3tago.test@protonmail.com", Name: "D3TAgo Test CC 1 (Protonmail)"},
 		{Email: "d3tago.test.cc@tutanota.com", Name: "D3TAgo Test CC 2 (Tutanota)"}}
-	req.BCC = []*domSchema.MailAddress{
+	req.BCC = []*appDTO.MailAddressDTO{
 		{Email: "d3tago.test@tutanota.com", Name: "D3TAgo Test BCC 1 (Tutanota)"},
 		{Email: "d3tago.test.bcc@outlook.com", Name: "D3TAgo Test BCC 2 (Outlook)"}}
 	req.TemplateData = map[string]interface{}{
@@ -58,7 +57,7 @@ func TestEmailService_Send(t *testing.T) {
 		"Body.ActivationURL": "https://google.com",
 		"Footer.Name":        "Customer Service",
 	}
-	req.ProcessingType = "ASYNC"
+	req.ProcessingType = "SYNC"
 
 	i := newIdentity(h, t)
 	i.RequestInfo.RequestObject = "/api/v1/email/send"
