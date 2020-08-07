@@ -53,50 +53,6 @@ func TestEmail_ListAllEmailTemplate(t *testing.T) {
 	}
 }
 
-func TestEmail_FindEmailTemplateByCode(t *testing.T) {
-	// client request
-	// --> set on context param [http method = GET]
-
-	// setup echo
-	e := echo.New()
-
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/email/template/:code", nil)
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	res := httptest.NewRecorder()
-
-	c := e.NewContext(req, res)
-	c.SetParamNames("code")
-	c.SetParamValues("test.code")
-
-	// handler
-	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
-		return
-	}
-
-	// set identity (test only)
-	token, claims, err := generateUserTestToken(handler, t)
-	if err != nil {
-		t.Errorf("generateUserTestToken: %s", err.Error())
-		return
-	}
-	c.Set("identity.token.jwt", token)
-	c.Set("identity.token.jwt.claims", claims)
-
-	// test feature
-	email, err := NewFEmail(handler)
-	if err != nil {
-		t.Errorf("NewFEmail: %s", err.Error())
-		return
-	}
-
-	if assert.NoError(t, email.FindEmailTemplateByCode(c)) {
-		assert.Equal(t, http.StatusOK, res.Code)
-		t.Logf("RESPONSE.Email.FindEmailTemplateByCode: %s", res.Body.String())
-	}
-}
-
 func TestEmail_CreateEmailTemplate(t *testing.T) {
 	// client request
 	reqDTO := `{
@@ -145,6 +101,50 @@ func TestEmail_CreateEmailTemplate(t *testing.T) {
 	if assert.NoError(t, email.CreateEmailTemplate(c)) {
 		assert.Equal(t, http.StatusOK, res.Code)
 		t.Logf("RESPONSE.Email.CreateEmailTemplate: %s", res.Body.String())
+	}
+}
+
+func TestEmail_FindEmailTemplateByCode(t *testing.T) {
+	// client request
+	// --> set on context param [http method = GET]
+
+	// setup echo
+	e := echo.New()
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/email/template/:code", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	res := httptest.NewRecorder()
+
+	c := e.NewContext(req, res)
+	c.SetParamNames("code")
+	c.SetParamValues("test.code.04")
+
+	// handler
+	handler := newHandler()
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
+
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
+	email, err := NewFEmail(handler)
+	if err != nil {
+		t.Errorf("NewFEmail: %s", err.Error())
+		return
+	}
+
+	if assert.NoError(t, email.FindEmailTemplateByCode(c)) {
+		assert.Equal(t, http.StatusOK, res.Code)
+		t.Logf("RESPONSE.Email.FindEmailTemplateByCode: %s", res.Body.String())
 	}
 }
 

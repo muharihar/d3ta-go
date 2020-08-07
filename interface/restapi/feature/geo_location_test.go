@@ -52,51 +52,6 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 	}
 }
 
-func TestFGeoLocation_GetCountry(t *testing.T) {
-
-	// Setup
-	e := echo.New()
-
-	req := httptest.NewRequest(http.MethodGet, "/api/v1/geolocation/country/:code", nil)
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	res := httptest.NewRecorder()
-
-	c := e.NewContext(req, res)
-	// c.SetPath("/api/v1/geolocation/country/:code")
-	c.SetParamNames("code")
-	c.SetParamValues("ID")
-
-	// handler
-	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
-		return
-	}
-
-	// set identity (test only)
-	token, claims, err := generateUserTestToken(handler, t)
-	if err != nil {
-		t.Errorf("generateUserTestToken: %s", err.Error())
-		return
-	}
-	c.Set("identity.token.jwt", token)
-	c.Set("identity.token.jwt.claims", claims)
-
-	// test feature
-
-	geoLoc, err := NewFGeoLocation(handler)
-	if err != nil {
-		panic(err)
-	}
-
-	// Assertions
-	if assert.NoError(t, geoLoc.GetCountry(c)) {
-		assert.Equal(t, http.StatusOK, res.Code)
-		// assert.Equal(t, resDTO, res.Body.String())
-		t.Logf("RESPONSE.geoLoc.GetCountry: %s", res.Body.String())
-	}
-}
-
 func TestFGeoLocation_AddCountry(t *testing.T) {
 	// variables
 	reqDTO := `{
@@ -143,6 +98,51 @@ func TestFGeoLocation_AddCountry(t *testing.T) {
 		assert.Equal(t, http.StatusCreated, res.Code)
 		// assert.Equal(t, resDTO, res.Body.String())
 		t.Logf("RESPONSE.geoLoc.AddCountry: %s", res.Body.String())
+	}
+}
+
+func TestFGeoLocation_GetCountry(t *testing.T) {
+
+	// Setup
+	e := echo.New()
+
+	req := httptest.NewRequest(http.MethodGet, "/api/v1/geolocation/country/:code", nil)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	res := httptest.NewRecorder()
+
+	c := e.NewContext(req, res)
+	// c.SetPath("/api/v1/geolocation/country/:code")
+	c.SetParamNames("code")
+	c.SetParamValues("XX")
+
+	// handler
+	handler := newHandler()
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
+
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
+
+	geoLoc, err := NewFGeoLocation(handler)
+	if err != nil {
+		panic(err)
+	}
+
+	// Assertions
+	if assert.NoError(t, geoLoc.GetCountry(c)) {
+		assert.Equal(t, http.StatusOK, res.Code)
+		// assert.Equal(t, resDTO, res.Body.String())
+		t.Logf("RESPONSE.geoLoc.GetCountry: %s", res.Body.String())
 	}
 }
 
