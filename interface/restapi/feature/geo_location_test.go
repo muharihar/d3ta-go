@@ -22,9 +22,23 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
+	// handler
 	handler := newHandler()
-	initialize.LoadAllDatabase(handler)
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
 
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
 	geoLoc, err := NewFGeoLocation(handler)
 	if err != nil {
 		panic(err)
@@ -52,8 +66,23 @@ func TestFGeoLocation_GetCountry(t *testing.T) {
 	c.SetParamNames("code")
 	c.SetParamValues("ID")
 
+	// handler
 	handler := newHandler()
-	initialize.LoadAllDatabase(handler)
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
+
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
 
 	geoLoc, err := NewFGeoLocation(handler)
 	if err != nil {
@@ -87,9 +116,23 @@ func TestFGeoLocation_AddCountry(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
+	// handler
 	handler := newHandler()
-	initialize.LoadAllDatabase(handler)
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
 
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
 	geoLoc, err := NewFGeoLocation(handler)
 	if err != nil {
 		panic(err)
@@ -124,9 +167,23 @@ func TestFGeoLocation_UpdateCountry(t *testing.T) {
 	c.SetParamNames("code")
 	c.SetParamValues("XX")
 
+	// handler
 	handler := newHandler()
-	initialize.LoadAllDatabase(handler)
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
 
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
 	geoLoc, err := NewFGeoLocation(handler)
 	if err != nil {
 		panic(err)
@@ -153,9 +210,23 @@ func TestFGeoLocation_DeleteCountry(t *testing.T) {
 	c.SetParamNames("code")
 	c.SetParamValues("XX")
 
+	// handler
 	handler := newHandler()
-	initialize.LoadAllDatabase(handler)
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
 
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
 	geoLoc, err := NewFGeoLocation(handler)
 	if err != nil {
 		panic(err)

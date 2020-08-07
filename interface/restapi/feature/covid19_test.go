@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	"github.com/muharihar/d3ta-go/system/initialize"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,7 +25,23 @@ func TestFCovid19_DisplayCurrentDataByCountry(t *testing.T) {
 
 	c := e.NewContext(req, res)
 
+	// handler
 	handler := newHandler()
+	if err := initialize.LoadAllDatabase(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+		return
+	}
+
+	// set identity (test only)
+	token, claims, err := generateUserTestToken(handler, t)
+	if err != nil {
+		t.Errorf("generateUserTestToken: %s", err.Error())
+		return
+	}
+	c.Set("identity.token.jwt", token)
+	c.Set("identity.token.jwt.claims", claims)
+
+	// test feature
 	covid19, err := NewFCovid19(handler)
 	if err != nil {
 		panic(err)
