@@ -51,11 +51,7 @@ func TestAuths_RegisterUser(t *testing.T) {
 
 func TestAuths_ActivateRegistration(t *testing.T) {
 	// variables
-	/*
-		reqDTO := `{
-			"activationCode" : "a70112cc-bca6-45c2-9bb6-cf3a56daf566"
-		}`
-	*/
+	// via url path
 
 	// Setup
 	e := echo.New()

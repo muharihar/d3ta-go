@@ -9,7 +9,6 @@ import (
 	domEntity "github.com/muharihar/d3ta-go/modules/auths/la/domain/entity"
 	domRepo "github.com/muharihar/d3ta-go/modules/auths/la/domain/repository"
 	domSchema "github.com/muharihar/d3ta-go/modules/auths/la/domain/schema"
-	"github.com/muharihar/d3ta-go/modules/auths/la/infrastructure/template"
 	sysError "github.com/muharihar/d3ta-go/system/error"
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/identity"
@@ -88,13 +87,7 @@ func (r *AuthenticationRepo) Register(req *domSchema.RegisterRequest, i identity
 	// return response
 	resp := new(domSchema.RegisterResponse)
 	resp.Email = req.Email
-
-	// send activation email (backgourd, feature: event sourcing, OnRegistered Event send Email)
-	// if needed, we can move this part to application (service) layer
-	go r.sendActivationCodeEmail(req.Email, req.NickName, tmpUserRegEntt.ActivationCode, "html", i.RequestInfo.Host)
-	// if err := r.sendActivationCodeEmail(req.Email, req.NickName, tmpUserRegEntt.ActivationCode, "html"); err != nil {
-	//	  panic(err)
-	// }
+	resp.ActivationCode = tmpUserRegEntt.ActivationCode
 
 	return resp, nil
 }
@@ -161,14 +154,8 @@ func (r *AuthenticationRepo) ActivateRegistration(req *domSchema.ActivateRegistr
 	// return response
 	resp := new(domSchema.ActivateRegistrationResponse)
 	resp.Email = userEntt.Email
+	resp.NickName = userEntt.NickName
 	resp.DefaultRole = userEntt.AuthorityID
-
-	// send activation result
-	// if needed, we can move this part to application (service) layer
-	go r.sendActivationResultEmail(userEntt.Email, userEntt.NickName)
-	// if err := r.sendActivationResultEmail(userEntt.Email, userEntt.NickName); err != nil {
-	//	  panic(err)
-	// }
 
 	return resp, nil
 }
@@ -260,31 +247,4 @@ func (r *AuthenticationRepo) generateJWTToken(data *domEntity.SysUser) (token st
 	token, expiredAt, err = j.GenerateToken(claims)
 
 	return token, expiredAt, err
-}
-
-// if needed, we can move this part to application (service) layer
-func (r *AuthenticationRepo) sendActivationCodeEmail(toEmail, toName string, code, responseFormat string, host string) error {
-	cfg, err := r.handler.GetConfig()
-	if err != nil {
-		return err
-	}
-	url := fmt.Sprintf(cfg.IAM.Registration.ActivationURL, host)
-
-	activationURL := fmt.Sprintf("%s/%s/%s", url, code, responseFormat)
-
-	body := template.UserRegisterActivationTemplate(toEmail, toName, activationURL)
-
-	return r.smtp.SendEmail(toEmail, fmt.Sprintf("[%s] Account Activation", cfg.Applications.Name), body)
-}
-
-// if needed, we can move this part to application (service) layer
-func (r *AuthenticationRepo) sendActivationResultEmail(toEmail, toName string) error {
-	cfg, err := r.handler.GetConfig()
-	if err != nil {
-		return err
-	}
-
-	body := template.UserRegisterActivatedTemplate(toEmail, toName)
-
-	return r.smtp.SendEmail(toEmail, fmt.Sprintf("[%s] Account Activation Success", cfg.Applications.Name), body)
 }

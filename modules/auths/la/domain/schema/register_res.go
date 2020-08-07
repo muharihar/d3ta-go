@@ -4,7 +4,8 @@ import "encoding/json"
 
 // RegisterResponse type
 type RegisterResponse struct {
-	Email string `json:"email"`
+	Email          string `json:"email"`
+	ActivationCode string `json:"-"`
 }
 
 // ToJSON covert to JSON

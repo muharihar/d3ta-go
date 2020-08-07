@@ -5,46 +5,36 @@ import (
 	"testing"
 
 	"github.com/muharihar/d3ta-go/modules/auths/la/application/dto"
-	"github.com/muharihar/d3ta-go/system/config"
 	"github.com/muharihar/d3ta-go/system/handler"
-	"github.com/muharihar/d3ta-go/system/identity"
 	"github.com/muharihar/d3ta-go/system/initialize"
 )
 
-func newConfig(t *testing.T) (*config.Config, error) {
-	c, _, err := config.NewConfig("../../../../../conf")
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
-}
-
-func newAuthenticationSvc(t *testing.T) (*AuthenticationSvc, error) {
+func newAuthenticationSvc(t *testing.T) (*AuthenticationSvc, *handler.Handler, error) {
 	h, err := handler.NewHandler()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	c, err := newConfig(t)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	h.SetConfig(c)
 	if err := initialize.LoadAllDatabase(h); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	r, err := NewAuthenticationSvc(h)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return r, nil
+	return r, h, nil
 }
 
 func TestAuthenticationService_Register(t *testing.T) {
-	svc, err := newAuthenticationSvc(t)
+	svc, h, err := newAuthenticationSvc(t)
 	if err != nil {
 		t.Errorf("newAuthenticationSvc: %s", err.Error())
 		return
@@ -58,7 +48,9 @@ func TestAuthenticationService_Register(t *testing.T) {
 	req.Captcha = "just-capthcha-value" // validation on interface
 	req.CaptchaID = "just-chaptcha-id"  // validation on interface
 
-	resp, err := svc.Register(&req, identity.Identity{})
+	i := newIdentity(h, t)
+
+	resp, err := svc.Register(&req, i)
 	if err != nil {
 		t.Errorf("Register: %s", err.Error())
 		return
@@ -74,7 +66,7 @@ func TestAuthenticationService_Register(t *testing.T) {
 }
 
 func TestAuthenticationService_ActivateRegistration(t *testing.T) {
-	svc, err := newAuthenticationSvc(t)
+	svc, h, err := newAuthenticationSvc(t)
 	if err != nil {
 		t.Errorf("newAuthenticationSvc: %s", err.Error())
 		return
@@ -83,7 +75,9 @@ func TestAuthenticationService_ActivateRegistration(t *testing.T) {
 	req := dto.ActivateRegistrationReqDTO{}
 	req.ActivationCode = "a70112cc-bca6-45c2-9bb6-cf3a56daf566"
 
-	resp, err := svc.ActivateRegistration(&req, identity.Identity{})
+	i := newIdentity(h, t)
+
+	resp, err := svc.ActivateRegistration(&req, i)
 	if err != nil {
 		t.Errorf("ActivateRegistration: %s", err.Error())
 		return
@@ -99,7 +93,7 @@ func TestAuthenticationService_ActivateRegistration(t *testing.T) {
 }
 
 func TestAuthenticationService_Login(t *testing.T) {
-	svc, err := newAuthenticationSvc(t)
+	svc, h, err := newAuthenticationSvc(t)
 	if err != nil {
 		t.Errorf("newAuthenticationSvc: %s", err.Error())
 		return
@@ -111,7 +105,9 @@ func TestAuthenticationService_Login(t *testing.T) {
 	req.Captcha = "just-capthcha-value" // validation on interface
 	req.CaptchaID = "just-chaptcha-id"  // validation on interface
 
-	resp, err := svc.Login(&req, identity.Identity{})
+	i := newIdentity(h, t)
+
+	resp, err := svc.Login(&req, i)
 	if err != nil {
 		t.Errorf("Login: %s", err.Error())
 		return
@@ -127,7 +123,7 @@ func TestAuthenticationService_Login(t *testing.T) {
 }
 
 func TestAuthenticationService_LoginApp(t *testing.T) {
-	svc, err := newAuthenticationSvc(t)
+	svc, h, err := newAuthenticationSvc(t)
 	if err != nil {
 		t.Errorf("newAuthenticationSvc: %s", err.Error())
 		return
@@ -137,7 +133,9 @@ func TestAuthenticationService_LoginApp(t *testing.T) {
 	req.ClientKey = "53102ba5-b6b2-47ad-a68d-682463a8be29"
 	req.SecretKey = "OTk5ZDlmYjJlZGUyMjAxNTZkZThiNmNkMmJmNDI1NjdiNTYzMzcxNDEwNzNiNDBjM2NhZmIxOWY3NzZmYzhmNg=="
 
-	resp, err := svc.LoginApp(&req, identity.Identity{})
+	i := newIdentity(h, t)
+
+	resp, err := svc.LoginApp(&req, i)
 	if err != nil {
 		t.Errorf("LoginApp: %s", err.Error())
 		return

@@ -9,5 +9,5 @@ type RegisterReqDTO struct {
 
 // RegisterResDTO type
 type RegisterResDTO struct {
-	schema.RegisterResponse
+	Email string `json:"email"`
 }

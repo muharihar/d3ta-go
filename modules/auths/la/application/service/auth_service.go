@@ -1,10 +1,14 @@
 package service
 
 import (
+	"fmt"
+
 	appDTO "github.com/muharihar/d3ta-go/modules/auths/la/application/dto"
 	domRepo "github.com/muharihar/d3ta-go/modules/auths/la/domain/repository"
 	domSchema "github.com/muharihar/d3ta-go/modules/auths/la/domain/schema"
 	infRepo "github.com/muharihar/d3ta-go/modules/auths/la/infrastructure/repository"
+	appEmailDTO "github.com/muharihar/d3ta-go/modules/email/la/application/dto"
+	appEmailSvc "github.com/muharihar/d3ta-go/modules/email/la/application/service"
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/identity"
 )
@@ -15,8 +19,15 @@ func NewAuthenticationSvc(h *handler.Handler) (*AuthenticationSvc, error) {
 
 	svc := new(AuthenticationSvc)
 	svc.handler = h
+	if err := svc.initBaseService(); err != nil {
+		return nil, err
+	}
 
 	if svc.repo, err = infRepo.NewAuthenticationRepo(h); err != nil {
+		return nil, err
+	}
+
+	if svc.emailService, err = appEmailSvc.NewEmailService(h); err != nil {
 		return nil, err
 	}
 
@@ -26,7 +37,8 @@ func NewAuthenticationSvc(h *handler.Handler) (*AuthenticationSvc, error) {
 // AuthenticationSvc type
 type AuthenticationSvc struct {
 	BaseService
-	repo domRepo.IAuthenticationRepo
+	repo         domRepo.IAuthenticationRepo
+	emailService *appEmailSvc.EmailService
 }
 
 // Register user
@@ -49,10 +61,48 @@ func (s *AuthenticationSvc) Register(req *appDTO.RegisterReqDTO, i identity.Iden
 		return nil, err
 	}
 
+	// send email via email module (email - generic sub domain)
+	// -->
+	if err := s._sendActivationCodeEmail(req, res, i); err != nil {
+		return nil, err
+	}
+	// <--
+
 	resDTO := new(appDTO.RegisterResDTO)
 	resDTO.Email = res.Email
 
 	return resDTO, nil
+}
+
+func (s *AuthenticationSvc) _sendActivationCodeEmail(reqReg *appDTO.RegisterReqDTO, resReg *domSchema.RegisterResponse, i identity.Identity) error {
+	cfg, err := s.handler.GetConfig()
+	if err != nil {
+		return err
+	}
+	fromEmail := cfg.SMTPServers.DefaultSMTP.SenderEmail
+	fromName := cfg.SMTPServers.DefaultSMTP.SenderName
+
+	url := fmt.Sprintf(cfg.IAM.Registration.ActivationURL, i.RequestInfo.Host)
+	activationURL := fmt.Sprintf("%s/%s/%s", url, resReg.ActivationCode, "html")
+
+	// send activate registration via email (sub)domain [email module]
+	reqEmail := new(appEmailDTO.SendEmailReqDTO)
+	reqEmail.TemplateCode = "activate-registration-html"
+	reqEmail.From = &appEmailDTO.MailAddressDTO{Email: fromEmail, Name: fromName}
+	reqEmail.To = &appEmailDTO.MailAddressDTO{Email: reqReg.Email, Name: reqReg.NickName}
+	reqEmail.TemplateData = map[string]interface{}{
+		"Header.Name":        reqReg.NickName,
+		"Body.UserAccount":   reqReg.Username,
+		"Body.ActivationURL": activationURL,
+		"Footer.Name":        fromName,
+	}
+	reqEmail.ProcessingType = "ASYNC"
+
+	if _, err := s.emailService.Send(reqEmail, s.systemIdentity); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ActivateRegistration activate user registration
@@ -70,11 +120,45 @@ func (s *AuthenticationSvc) ActivateRegistration(req *appDTO.ActivateRegistratio
 		return nil, err
 	}
 
+	// send email via email module (email - generic sub domain)
+	// -->
+	if err := s._sendActivationResultEmail(req, res, i); err != nil {
+		return nil, err
+	}
+	// <--
+
 	resDTO := new(appDTO.ActivateRegistrationResDTO)
 	resDTO.Email = res.Email
+	resDTO.NickName = res.NickName
 	resDTO.DefaultRole = res.DefaultRole
 
 	return resDTO, nil
+}
+
+func (s *AuthenticationSvc) _sendActivationResultEmail(reqActReg *appDTO.ActivateRegistrationReqDTO, resAtcReg *domSchema.ActivateRegistrationResponse, i identity.Identity) error {
+	cfg, err := s.handler.GetConfig()
+	if err != nil {
+		return err
+	}
+	fromEmail := cfg.SMTPServers.DefaultSMTP.SenderEmail
+	fromName := cfg.SMTPServers.DefaultSMTP.SenderName
+
+	// send activate registration via email (sub)domain [email module]
+	reqEmail := new(appEmailDTO.SendEmailReqDTO)
+	reqEmail.TemplateCode = "account-activation-html"
+	reqEmail.From = &appEmailDTO.MailAddressDTO{Email: fromEmail, Name: fromName}
+	reqEmail.To = &appEmailDTO.MailAddressDTO{Email: resAtcReg.Email, Name: resAtcReg.NickName}
+	reqEmail.TemplateData = map[string]interface{}{
+		"Header.Name": resAtcReg.NickName,
+		"Footer.Name": fromName,
+	}
+	reqEmail.ProcessingType = "ASYNC"
+
+	if _, err := s.emailService.Send(reqEmail, s.systemIdentity); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // Login user

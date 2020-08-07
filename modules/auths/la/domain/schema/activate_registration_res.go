@@ -5,6 +5,7 @@ import "encoding/json"
 // ActivateRegistrationResponse type
 type ActivateRegistrationResponse struct {
 	Email       string `json:"email"`
+	NickName    string `json:"NickName"`
 	DefaultRole string `json:"defaultRole"`
 }
 
