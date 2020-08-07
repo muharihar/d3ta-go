@@ -115,7 +115,8 @@ SMTPServers:
     port: "587"
     username: "email@gmail.com"
     password: "password"
-    sender: "no-reply@gmail.com"
+    senderEmail: "no-reply@gmail.com"
+    senderName: "D3TAgo NoReply"
 
 # OpenAPIDefinition
 openAPIDefinition:

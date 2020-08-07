@@ -21,19 +21,21 @@ func NewSMTPSender(h *handler.Handler) (*SMTPSender, error) {
 	smtp.port = cfg.SMTPServers.DefaultSMTP.Port
 	smtp.username = cfg.SMTPServers.DefaultSMTP.Username
 	smtp.password = cfg.SMTPServers.DefaultSMTP.Password
-	smtp.sender = cfg.SMTPServers.DefaultSMTP.Sender
+	smtp.senderEmail = cfg.SMTPServers.DefaultSMTP.SenderEmail
+	smtp.senderName = cfg.SMTPServers.DefaultSMTP.SenderName
 
 	return smtp, nil
 }
 
 // SMTPSender type
 type SMTPSender struct {
-	handler  *handler.Handler
-	server   string
-	port     string
-	username string
-	password string
-	sender   string
+	handler     *handler.Handler
+	server      string
+	port        string
+	username    string
+	password    string
+	senderEmail string
+	senderName  string
 }
 
 type EmailFormat string
@@ -50,7 +52,7 @@ func (s *SMTPSender) SendEmail(toEmail string, subject string, body string) erro
 		"Subject: " + subject + "\n" + mime + body)
 
 	auth := smtp.PlainAuth("", s.username, s.password, s.server)
-	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, []string{toEmail}, msg)
+	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.senderEmail, []string{toEmail}, msg)
 	if err != nil {
 		return fmt.Errorf("Error from SMTP Server: %s", err.Error())
 	}
@@ -77,7 +79,7 @@ func (s *SMTPSender) SendEmails(toEmails []string, hFromEmail string, hToEmail s
 		"Subject: " + subject + "\n" + mime + body)
 
 	auth := smtp.PlainAuth("", s.username, s.password, s.server)
-	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.sender, toEmails, msg)
+	err := smtp.SendMail(fmt.Sprintf("%s:%s", s.server, s.port), auth, s.senderEmail, toEmails, msg)
 
 	if err != nil {
 		return fmt.Errorf("Error from SMTP Server: %s", err.Error())
