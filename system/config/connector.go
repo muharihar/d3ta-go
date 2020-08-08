@@ -21,3 +21,18 @@ type Covid19goid struct {
 	Server string `json:"server" yaml:"server"`
 	Enable bool   `json:"enable" yaml:"enable"`
 }
+
+// Identity type
+type Identity struct {
+	EA2M EA2M `json:"ea2m" yaml:"ea2m"`
+}
+
+// EA2M Type
+type EA2M struct {
+	Server            string `json:"server" yaml:"server"`
+	ClientAccessKey   string `json:"clientAccessKey" yaml:"clientAccessKey"`
+	ClientSecretKey   string `json:"clientSecretKey" yaml:"clientSecretKey"`
+	AllowDevToken     bool   `json:"allowDevToken" yaml:"allowDevToken"`
+	DevIdentityToken  string `json:"devIdentityToken" yaml:"devIdentityToken"`
+	DevIdentityClaims string `json:"devIdentityClaims" yaml:"devIdentityClaims"`
+}

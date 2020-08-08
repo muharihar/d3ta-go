@@ -75,7 +75,7 @@ func StartRestAPIServer() error {
 	// e.Debug = true
 
 	// set header - banner
-	e.HideBanner = cfg.Applications.Options.ShowEngineHeader
+	e.HideBanner = cfg.Applications.Servers.RestAPI.Options.ShowEngineHeader
 	if e.HideBanner {
 		printSvrHeader(e, cfg)
 	}
@@ -84,7 +84,7 @@ func StartRestAPIServer() error {
 	SetRouters(e, superHandler)
 
 	// Start server with Gracefull shutdown
-	httpPort := fmt.Sprintf(":%s", cfg.Applications.Options.Listener.Port)
+	httpPort := fmt.Sprintf(":%s", cfg.Applications.Servers.RestAPI.Options.Listener.Port)
 	go func() {
 		if err := e.Start(httpPort); err != nil {
 			e.Logger.Infof("Shutting down the server [%s]", err.Error())

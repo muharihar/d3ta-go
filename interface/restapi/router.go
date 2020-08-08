@@ -28,7 +28,9 @@ func SetRouters(e *echo.Echo, h *handler.Handler) {
 
 	// set default middleware
 	e.Pre(middleware.RemoveTrailingSlash())
-	e.Use(middleware.Logger())
+	if cfg.Applications.Servers.RestAPI.Options.Middlewares.Logger.Enable {
+		e.Use(middleware.Logger())
+	}
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 
@@ -37,11 +39,6 @@ func SetRouters(e *echo.Echo, h *handler.Handler) {
 		templates: template.Must(template.ParseGlob("www/templates/**/*.*ml")),
 	}
 	e.Renderer = t
-	/*
-		e.GET("/hello", func(c echo.Context) error {
-			return c.Render(http.StatusOK, "views/hello", map[string]interface{}{"data": cfg.Applications.Name})
-		})
-	*/
 
 	// Set CORS
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -60,7 +57,7 @@ func SetRouters(e *echo.Echo, h *handler.Handler) {
 	router.SetSystem(gs, features.System)
 
 	// OpenApi/swagger-ui
-	if cfg.Applications.Options.DisplayOpenAPI {
+	if cfg.Applications.Servers.RestAPI.Options.DisplayOpenAPI {
 		gd := e.Group("openapi")
 		router.SetOpenAPI(gd, features.OpenAPI)
 	}

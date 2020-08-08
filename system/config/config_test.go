@@ -17,6 +17,6 @@ func TestConfig(t *testing.T) {
 	}
 
 	if cfg != nil {
-		t.Logf("Config: %#v", cfg.OpenAPIDefinition)
+		t.Logf("Config: %#v", cfg)
 	}
 }

@@ -6,6 +6,7 @@ import (
 	// "github.com/jinzhu/gorm"
 	"gorm.io/gorm"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/muharihar/d3ta-go/system/config"
 )
 
@@ -20,8 +21,9 @@ func NewHandler() (*Handler, error) {
 
 // Handler represent Handler
 type Handler struct {
-	config  *config.Config
-	dbGorms map[string]*gorm.DB
+	config          *config.Config
+	dbGorms         map[string]*gorm.DB
+	casbinEnforcers map[string]*casbin.Enforcer
 }
 
 // SetConfig set Config
@@ -52,6 +54,23 @@ func (h *Handler) GetGormDB(conName string) (*gorm.DB, error) {
 		err := fmt.Errorf("DB Connection Name '%s' Not Found", conName)
 		return nil, err
 	}
-
 	return db, nil
+}
+
+// SetCasbinEnforcer set CasbinEnforcer
+func (h *Handler) SetCasbinEnforcer(ceName string, ce *casbin.Enforcer) {
+	if h.casbinEnforcers == nil {
+		h.casbinEnforcers = make(map[string]*casbin.Enforcer)
+	}
+	h.casbinEnforcers[ceName] = ce
+}
+
+// GetCasbinEnforcer get CasbinEnforcer
+func (h *Handler) GetCasbinEnforcer(ceName string) (*casbin.Enforcer, error) {
+	ce, exist := h.casbinEnforcers[ceName]
+	if !exist {
+		err := fmt.Errorf("Casbin Enforcer Name '%s' Not Found", ceName)
+		return nil, err
+	}
+	return ce, nil
 }

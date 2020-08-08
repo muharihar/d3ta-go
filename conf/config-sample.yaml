@@ -1,14 +1,32 @@
 ---
 # Applications
 applications:
-  name: "DDD Technical Architecture Patterns:: REST API"
-  version: "0.1.0"
-  description: "Domain-Driven Design Technical Architecture Patterns:: Golang Sample"
-  options:
-    showEngineHeader: true
-    displayOpenAPI: true
-    listener:
-      port: 2020
+  servers:
+    restapi:
+      name: "DDD Technical Architecture Patterns:: REST API"
+      version: "0.1.0"
+      description: "Domain-Driven Design Technical Architecture Patterns:: Golang Sample"
+      options:
+        showEngineHeader: true
+        displayOpenAPI: true
+        listener:
+          port: 2020
+        middlewares:
+          logger:
+            enable: true
+        openAPIDefinition: # OpenAPIDefinition
+          info:
+            title: "DDD Technical Architecture Patterns: REST API"
+            description: "A Simple Implementation of `Domain-Driven Design Technical Architecture Patterns` in Golang"
+            termsOfService: https://github.com/muharihar/d3la-go
+            contact:
+              name: Muhammad Hari
+              url: https://github.com/muharihar
+              email: hi.muhammad.hari@gmail.com
+            license:
+              name: MIT
+              url: https://github.com/muharihar/d3la-go
+            version: 1.0.0
 
 # Databases
 databases:
@@ -117,18 +135,3 @@ SMTPServers:
     password: "password"
     senderEmail: "no-reply@gmail.com"
     senderName: "D3TAgo NoReply"
-
-# OpenAPIDefinition
-openAPIDefinition:
-  info:
-    title: "DDD Technical Architecture Patterns: REST API"
-    description: "A Simple Implementation of `Domain-Driven Design Technical Architecture Patterns` in Golang"
-    termsOfService: https://github.com/muharihar/d3la-go
-    contact:
-      name: Muhammad Hari
-      url: https://github.com/muharihar
-      email: hi.muhammad.hari@gmail.com
-    license:
-      name: MIT
-      url: https://github.com/muharihar/d3la-go
-    version: 1.0.0

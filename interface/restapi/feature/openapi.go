@@ -30,7 +30,7 @@ func (f *FOpenAPI) SwaggerUI(c echo.Context) error {
 	}
 
 	data := map[string]interface{}{
-		"htmlTitle": cfg.Applications.Name,
+		"htmlTitle": cfg.Applications.Servers.RestAPI.Name,
 	}
 
 	return c.Render(http.StatusOK, "openapis/swagger-ui", data)
@@ -44,14 +44,14 @@ func (f *FOpenAPI) GenOpenAPI(c echo.Context) error {
 	}
 
 	data := map[string]interface{}{
-		"info.Title":              cfg.OpenAPIDefinition.Info.Title,
-		"info.Description":        cfg.OpenAPIDefinition.Info.Description,
-		"info.Contact.Name":       cfg.OpenAPIDefinition.Info.Contact.Name,
-		"info.Contact.URL":        cfg.OpenAPIDefinition.Info.Contact.URL,
-		"info.Contact.Email":      cfg.OpenAPIDefinition.Info.Contact.Email,
-		"info.License.Name":       cfg.OpenAPIDefinition.Info.License.Name,
-		"info.License.URL":        cfg.OpenAPIDefinition.Info.License.URL,
-		"info.Version":            cfg.OpenAPIDefinition.Info.Version,
+		"info.Title":              cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.Title,
+		"info.Description":        cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.Description,
+		"info.Contact.Name":       cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.Contact.Name,
+		"info.Contact.URL":        cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.Contact.URL,
+		"info.Contact.Email":      cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.Contact.Email,
+		"info.License.Name":       cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.License.Name,
+		"info.License.URL":        cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.License.URL,
+		"info.Version":            cfg.Applications.Servers.RestAPI.Options.OpenAPIDefinition.Info.Version,
 		"server.URL.Host.Default": c.Request().Host,
 	}
 

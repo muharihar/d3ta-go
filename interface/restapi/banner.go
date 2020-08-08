@@ -35,9 +35,9 @@ func printSvrHeader(e *echo.Echo, cfg *config.Config) {
 	colorer := color.New()
 	colorer.SetOutput(e.Logger.Output())
 	colorer.Printf(myBanner,
-		colorer.Cyan("v"+cfg.Applications.Version),
+		colorer.Cyan("v"+cfg.Applications.Servers.RestAPI.Version),
 		colorer.Red("v"+echo.Version),
-		colorer.Cyan(cfg.Applications.Name),
-		colorer.Yellow(cfg.Applications.Description),
+		colorer.Cyan(cfg.Applications.Servers.RestAPI.Name),
+		colorer.Yellow(cfg.Applications.Servers.RestAPI.Description),
 	)
 }
