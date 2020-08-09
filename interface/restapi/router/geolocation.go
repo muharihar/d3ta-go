@@ -12,7 +12,7 @@ func SetGeoLocation(eg *echo.Group, f *feature.FGeoLocation) {
 	gc := eg.Group("/geolocation")
 	gc.Use(internalMiddleware.JWTVerifier(f.GetHandler()))
 
-	gc.GET("/country/list-all", f.ListAllCountry)
+	gc.GET("/countries/list-all", f.ListAllCountry)
 	gc.GET("/country/:code", f.GetCountry)
 	gc.POST("/country", f.AddCountry)
 	gc.PUT("/country/:code", f.UpdateCountry)
