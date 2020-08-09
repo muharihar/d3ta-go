@@ -46,7 +46,7 @@ func newRepo(t *testing.T) (repository.IAuthenticationRepo, *handler.Handler, er
 
 func newIdentity(h *handler.Handler, t *testing.T) identity.Identity {
 	i, err := identity.NewIdentity(
-		identity.TokenJWT, "", nil, nil, h,
+		identity.DefaultIdentity, identity.TokenJWT, "", nil, nil, h,
 	)
 	if err != nil {
 		t.Errorf("NewIdentity: %s", err.Error())

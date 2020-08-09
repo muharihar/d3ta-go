@@ -29,7 +29,7 @@ func (b *BaseService) initSystemIdentity() error {
 	if err != nil {
 		return err
 	}
-	if b.systemIdentity, err = identity.NewIdentity(identity.TokenJWT, token, claims, context.NewCtx(context.SystemCtx), b.handler); err != nil {
+	if b.systemIdentity, err = identity.NewIdentity(identity.SystemIdentity, identity.TokenJWT, token, claims, context.NewCtx(context.SystemCtx), b.handler); err != nil {
 		return err
 	}
 	return nil

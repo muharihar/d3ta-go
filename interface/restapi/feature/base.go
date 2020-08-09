@@ -75,7 +75,7 @@ func (f *BaseFeature) SetIdentity(c echo.Context) (identity.Identity, error) {
 		claims = &identity.JWTCustomClaims{}
 	}
 
-	i, err := identity.NewIdentity(identity.TokenJWT, token.(string), claims.(*identity.JWTCustomClaims), c, f.handler)
+	i, err := identity.NewIdentity(identity.DefaultIdentity, identity.TokenJWT, token.(string), claims.(*identity.JWTCustomClaims), c, f.handler)
 
 	return i, err
 }

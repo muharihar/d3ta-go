@@ -18,7 +18,7 @@ func newConfig(t *testing.T) (*config.Config, error) {
 
 func newIdentity(h *handler.Handler, t *testing.T) identity.Identity {
 	i, err := identity.NewIdentity(
-		identity.TokenJWT, "", nil, nil, h,
+		identity.DefaultIdentity, identity.TokenJWT, "", nil, nil, h,
 	)
 	if err != nil {
 		t.Errorf("NewIdentity: %s", err.Error())

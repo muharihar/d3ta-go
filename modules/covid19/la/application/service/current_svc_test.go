@@ -46,7 +46,7 @@ func newCurrentSvc(t *testing.T) (*CurrentSvc, *handler.Handler, error) {
 
 func newIdentity(h *handler.Handler, t *testing.T) identity.Identity {
 	i, err := identity.NewIdentity(
-		identity.TokenJWT, "", nil, nil, h,
+		identity.DefaultIdentity, identity.TokenJWT, "", nil, nil, h,
 	)
 	if err != nil {
 		t.Errorf("NewIdentity: %s", err.Error())

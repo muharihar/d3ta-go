@@ -31,5 +31,12 @@ type JWT struct {
 
 // Casbin Type
 type Casbin struct {
-	ModelPath string `json:"modelPath" yaml:"modelPath"`
+	ModelPath string          `json:"modelPath" yaml:"modelPath"`
+	Enforcers CasbinEnforcers `json:"enforcers" yaml:"enforcers"`
+}
+
+// CasbinEnforcers type
+type CasbinEnforcers struct {
+	DefaultEnforcerID string `json:"defaultEnforcerID" yaml:"defaultEnforcerID"`
+	SystemEnforcerID  string `json:"systemEnforcerID" yaml:"systemEnforcerID"`
 }

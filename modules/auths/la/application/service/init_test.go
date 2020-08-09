@@ -27,7 +27,7 @@ func newIdentity(h *handler.Handler, t *testing.T) identity.Identity {
 	if err != nil {
 		return identity.Identity{}
 	}
-	i, err := identity.NewIdentity(identity.TokenJWT, token, claims, context.NewCtx(context.SystemCtx), h)
+	i, err := identity.NewIdentity(identity.DefaultIdentity, identity.TokenJWT, token, claims, context.NewCtx(context.SystemCtx), h)
 	if err != nil {
 		return identity.Identity{}
 	}

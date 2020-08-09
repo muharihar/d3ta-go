@@ -66,12 +66,9 @@ func (j *JWT) ParseToken(tokenString string) (*JWTCustomClaims, error) {
 			return claims, nil
 		}
 		return nil, ErrTokenInvalid
-
 	} else {
 		return nil, ErrTokenInvalid
-
 	}
-
 }
 
 // RefreshToken update token

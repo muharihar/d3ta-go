@@ -23,17 +23,26 @@ const (
 	TokenSimple TokenType = "Simple"
 )
 
+// IdentityType Type
+type IdentityType string
+
+const (
+	DefaultIdentity IdentityType = "default"
+	SystemIdentity  IdentityType = "system"
+)
+
 // NewIdentity new Identity
-func NewIdentity(tokenType TokenType, token string, claims *JWTCustomClaims, ctx interface{}, h *handler.Handler) (Identity, error) {
+func NewIdentity(iType IdentityType, tokenType TokenType, token string, claims *JWTCustomClaims, ctx interface{}, h *handler.Handler) (Identity, error) {
 
 	i := Identity{
-		handler:     h,
-		IsLogin:     false,
-		IsAnonymous: false,
-		TokenType:   tokenType,
-		Token:       token,
-		Claims:      claims,
-		ctx:         ctx,
+		identityType: iType,
+		handler:      h,
+		IsLogin:      false,
+		IsAnonymous:  false,
+		TokenType:    tokenType,
+		Token:        token,
+		Claims:       claims,
+		ctx:          ctx,
 	}
 
 	jwt, err := NewJWT(h)
@@ -71,6 +80,8 @@ func NewIdentity(tokenType TokenType, token string, claims *JWTCustomClaims, ctx
 
 // Identity type
 type Identity struct {
+	identityType IdentityType
+
 	ctx            interface{}
 	handler        *handler.Handler
 	casbinEnforcer *casbin.Enforcer
@@ -154,9 +165,22 @@ func (i *Identity) CanAccess(domain, obj, act string, enforcer *casbin.Enforcer)
 		if err != nil {
 			return false
 		}
-		i.casbinEnforcer, err = service.NewCasbinEnforcer(i.handler, cfg.IAM.Casbin.ModelPath)
-		if err != nil {
-			return false
+
+		// use default casbin enforcer from handler
+		ceName := cfg.IAM.Casbin.Enforcers.DefaultEnforcerID
+		if i.identityType == SystemIdentity {
+			ceName = cfg.IAM.Casbin.Enforcers.SystemEnforcerID
+		}
+
+		ce, _ := i.handler.GetCasbinEnforcer(ceName)
+		if ce == nil {
+			i.casbinEnforcer, err = service.NewCasbinEnforcer(i.handler, cfg.IAM.Casbin.ModelPath)
+			if err != nil {
+				return false
+			}
+			i.handler.SetCasbinEnforcer(ceName, i.casbinEnforcer)
+		} else {
+			i.casbinEnforcer = ce
 		}
 	}
 

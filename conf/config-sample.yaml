@@ -95,6 +95,9 @@ IAM:
     signingKey: "D3TA-GO-SigningKey"
   casbin:
     modelPath: "casbin/casbin_rbac_rest_model.conf"
+    enforcers:
+      defaultEnforcerID: "default-casbin-enforcer"
+      systemEnforcerID: "system-casbin-enforcer"
 
 # securities
 securities:
