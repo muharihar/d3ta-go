@@ -26,8 +26,8 @@ func TestEmail_ListAllEmailTemplate(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -77,8 +77,8 @@ func TestEmail_CreateEmailTemplate(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -121,8 +121,8 @@ func TestEmail_FindEmailTemplateByCode(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -173,8 +173,8 @@ func TestEmail_UpdateEmailTemplate(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -219,8 +219,8 @@ func TestEmail_SetActiveEmailTemplate(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -263,8 +263,8 @@ func TestEmail_DeleteEmailTemplate(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -324,8 +324,8 @@ func TestEmail_SendEmail(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 

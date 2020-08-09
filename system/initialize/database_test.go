@@ -32,13 +32,13 @@ func newHandler(t *testing.T) (*handler.Handler, error) {
 	return h, nil
 }
 
-func TestLoadAllDatabase(t *testing.T) {
+func TestLoadAllDatabaseConnection(t *testing.T) {
 	h, err := newHandler(t)
 	if err != nil {
 		t.Errorf("newHandler: %s", err.Error())
 	}
 
-	if err = LoadAllDatabase(h); err != nil {
+	if err = LoadAllDatabaseConnection(h); err != nil {
 		t.Errorf("newHandler: %s", err.Error())
 	}
 }

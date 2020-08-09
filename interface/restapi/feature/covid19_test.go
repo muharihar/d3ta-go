@@ -27,8 +27,8 @@ func TestFCovid19_DisplayCurrentDataByCountry(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 

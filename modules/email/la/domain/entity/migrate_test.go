@@ -28,8 +28,8 @@ func newHandler(t *testing.T) (*handler.Handler, error) {
 	}
 
 	h.SetConfig(c)
-	if err := initialize.LoadAllDatabase(h); err != nil {
-		t.Errorf("LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
+		t.Errorf("LoadAllDatabaseConnection: %s", err.Error())
 	}
 
 	return h, nil

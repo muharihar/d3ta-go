@@ -32,7 +32,7 @@ func TestAuths_RegisterUser(t *testing.T) {
 	c := e.NewContext(req, res)
 
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
 		panic(err)
 	}
 
@@ -65,7 +65,7 @@ func TestAuths_ActivateRegistration(t *testing.T) {
 	c.SetParamValues("a70112cc-bca6-45c2-9bb6-cf3a56daf566")
 
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
 		panic(err)
 	}
 
@@ -102,7 +102,7 @@ func TestAuths_Login(t *testing.T) {
 	c := e.NewContext(req, res)
 
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
 		panic(err)
 	}
 
@@ -137,7 +137,7 @@ func TestAuths_LoginApp(t *testing.T) {
 	c := e.NewContext(req, res)
 
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
 		panic(err)
 	}
 

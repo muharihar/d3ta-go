@@ -24,8 +24,8 @@ func TestFGeoLocation_ListAllCountry(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -73,8 +73,8 @@ func TestFGeoLocation_AddCountry(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -117,8 +117,8 @@ func TestFGeoLocation_GetCountry(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -169,8 +169,8 @@ func TestFGeoLocation_UpdateCountry(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 
@@ -212,8 +212,8 @@ func TestFGeoLocation_DeleteCountry(t *testing.T) {
 
 	// handler
 	handler := newHandler()
-	if err := initialize.LoadAllDatabase(handler); err != nil {
-		t.Errorf("initialize.LoadAllDatabase: %s", err.Error())
+	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
 

@@ -21,7 +21,7 @@ func newAuthenticationSvc(t *testing.T) (*AuthenticationSvc, *handler.Handler, e
 	}
 
 	h.SetConfig(c)
-	if err := initialize.LoadAllDatabase(h); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		return nil, nil, err
 	}
 

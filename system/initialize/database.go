@@ -19,8 +19,8 @@ import (
 	"github.com/muharihar/d3ta-go/system/handler"
 )
 
-// LoadAllDatabase load All Database Connection
-func LoadAllDatabase(h *handler.Handler) error {
+// LoadAllDatabaseConnection load All Database Connection
+func LoadAllDatabaseConnection(h *handler.Handler) error {
 	cfg, err := h.GetConfig()
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func LoadAllDatabase(h *handler.Handler) error {
 			dbConfig := e.Field(i).Interface()
 			// fmt.Printf("%v %v %v\n", varName, varType, dbConfig)
 			if dbConfig != nil {
-				err := LoadDatabase(dbConfig.(config.Database), h)
+				err := LoadDatabaseConnection(dbConfig.(config.Database), h)
 				if err != nil {
 					return err
 				}
@@ -46,8 +46,8 @@ func LoadAllDatabase(h *handler.Handler) error {
 	return nil
 }
 
-// LoadDatabase load Database Connection using GORM
-func LoadDatabase(dbConfig config.Database, h *handler.Handler) error {
+// LoadDatabaseConnection load Database Connection using GORM
+func LoadDatabaseConnection(dbConfig config.Database, h *handler.Handler) error {
 	if h != nil {
 		connString := dbConfig.Username + ":" + dbConfig.Password + "@(" + dbConfig.HostName + ")/" + dbConfig.DBName + "?" + dbConfig.Config
 		if dbConfig.Driver == "sqlite3" {

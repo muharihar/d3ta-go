@@ -30,7 +30,7 @@ func newCountrySvc(t *testing.T) (*CountrySvc, error) {
 	}
 
 	h.SetConfig(c)
-	if err := initialize.LoadAllDatabase(h); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		return nil, err
 	}
 

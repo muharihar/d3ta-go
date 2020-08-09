@@ -25,7 +25,7 @@ func RunDBMigrate() {
 	}
 	h.SetConfig(c)
 
-	if err := initialize.LoadAllDatabase(h); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		fmt.Println("Error: ", err.Error())
 		return
 	}

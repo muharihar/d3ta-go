@@ -33,7 +33,7 @@ func newMigration(t *testing.T) (*Migration, *handler.Handler, error) {
 	}
 
 	h.SetConfig(c)
-	if err := initialize.LoadAllDatabase(h); err != nil {
+	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		return nil, nil, err
 	}
 
