@@ -1,5 +1,11 @@
 package config
 
+// Connectors represent available connectors
+type Connectors struct {
+	Identity Identity   `json:"identity" yaml:"identity"`
+	Covid19  ConCovid19 `json:"covid19" yaml:"covid19"`
+}
+
 // ConCovid19 represent Connector Covid19
 type ConCovid19 struct {
 	Covid19WHO  Covid19WHO  `json:"covid19who" yaml:"covid19who"`

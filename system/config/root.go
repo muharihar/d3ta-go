@@ -11,14 +11,6 @@ type Config struct {
 	SMTPServers  SMTPServers  `json:"SMTPServers" yaml:"SMTPServers"`
 }
 
-// Databases represent Databases
-type Databases struct {
-	IdentityDB Database `json:"identityDB" yaml:"identityDB"`
-	MainDB     Database `json:"mainDB" yaml:"mainDB"`
-	LogDB      Database `json:"logDB" yaml:"logDB"`
-	EmailDB    Database `json:"emailDB" yaml:"emailDB"`
-}
-
 // DirLocations represent DirLocations
 type DirLocations struct {
 	Conf  string `json:"conf" yaml:"conf"`
@@ -26,10 +18,4 @@ type DirLocations struct {
 	Temp  string `json:"temp" yaml:"temp"`
 	Log   string `json:"log" yaml:"log"`
 	Cache string `json:"cache" yaml:"cache"`
-}
-
-// Connectors type
-type Connectors struct {
-	Identity Identity   `json:"identity" yaml:"identity"`
-	Covid19  ConCovid19 `json:"covid19" yaml:"covid19"`
 }

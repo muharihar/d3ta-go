@@ -1,5 +1,13 @@
 package config
 
+// Databases represent Databases
+type Databases struct {
+	IdentityDB Database `json:"identityDB" yaml:"identityDB"`
+	MainDB     Database `json:"mainDB" yaml:"mainDB"`
+	LogDB      Database `json:"logDB" yaml:"logDB"`
+	EmailDB    Database `json:"emailDB" yaml:"emailDB"`
+}
+
 // Database represent Database
 type Database struct {
 	ConnectionName string `json:"connectionName"`
