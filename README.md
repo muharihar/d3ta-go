@@ -2,9 +2,9 @@
 
 A Simple Implementation of `DDD Technical Architecture Patterms` in Go.
 
-## Diagram v 0.1.0
+## Diagram v 0.2.0
 
-![DDD-Technical-Architecture-Patterns-Golang-01](docs/img/DDD-Technical-Architecture-Patterns-Golang-01.png)
+![DDD-Technical-Architecture-Patterns-Golang-0.2.0](docs/img/DDD-Technical-Architecture-Patterns-Golang-0.2.0.png)
 
 ### Components
 
@@ -16,7 +16,8 @@ B. Modules:
 
 1. Geolocation - using CRUD Architecture Pattern (GORM)
 2. Authentication - using DDD Layered Architecture (GORM)
-3. Covid19 - using DDD Layered Architecture (Adapters -> Connectors)
+3. Email - using DDD Layered Architecture (GORM, SMTP)
+4. Covid19 - using DDD Layered Architecture (Adapters -> Connectors)
 
 C. Common System Libraries:
 
