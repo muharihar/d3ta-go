@@ -1,17 +1,21 @@
 package utils
 
-import "testing"
+import (
+	"testing"
 
-func TestNet(t *testing.T){
+	"github.com/stretchr/testify/assert"
+)
+
+func TestNet_GetCurrentIP(t *testing.T) {
 	ip := GetCurrentIP()
-	if ip == "" {
-		t.Error("Invalid IP")
+	if !assert.NotEqual(t, "", ip) {
+		return
 	}
-	t.Logf("GetCurrentIP: %v", ip)
-	
+}
+
+func TestNet_GetHostName(t *testing.T) {
 	hn := GetHostName()
-	if hn == "" {
-		t.Error("Invalid HostName")
+	if !assert.NotEqual(t, "", hn) {
+		return
 	}
-	t.Logf("GetHostName: %v", hn)
 }
