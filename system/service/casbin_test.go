@@ -6,6 +6,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/initialize"
+	"github.com/stretchr/testify/assert"
 )
 
 func newCasbinEnforcer(t *testing.T) (*casbin.Enforcer, error) {
@@ -31,53 +32,61 @@ func newCasbinEnforcer(t *testing.T) (*casbin.Enforcer, error) {
 
 func TestCasbin_NewCasbinEnforcer(t *testing.T) {
 	enf, err := newCasbinEnforcer(t)
-	if err != nil {
-		t.Errorf("newCasbinEnforcer: %s", err.Error())
-	}
+	if assert.NoError(t, err, "Error while creating Casbin Enforcer: newCasbinEnforcer") {
+		// use case: user -> group -> role -> permission
 
-	ng := enf.GetNamedGroupingPolicy("g")
-	t.Logf("named.groups.all: %#v", ng)
+		// get named grouping policy
+		ng := enf.GetNamedGroupingPolicy("g")
+		assert.NotEmpty(t, ng)
+		t.Logf("named.groups.policy.all: %#v", ng)
 
-	ngf := enf.GetFilteredNamedGroupingPolicy("g", 0, "group:admin")
-	t.Logf("named.groups.Filtered: %#v", ngf)
+		// get filtered named grouping policy
+		ngf := enf.GetFilteredNamedGroupingPolicy("g", 0, "group:admin")
+		assert.NotEmpty(t, ngf)
+		t.Logf("named.groups.policy.Filtered: %#v", ngf)
 
-	r, err := enf.GetRolesForUser("group:admin")
-	if err != nil {
-		t.Errorf("GetRolesForUser: %s", err.Error())
-	}
-	t.Logf("user.roles: %#v", r)
-
-	ir, err := enf.GetImplicitRolesForUser("group:admin")
-	if err != nil {
-		t.Errorf("GetImplicitRolesForUser: %s", err.Error())
-	}
-	t.Logf("user.roles.implisit: %#v", ir)
-
-	pu := enf.GetPermissionsForUser("group:admin")
-	t.Logf("user.permissions: %#v", pu)
-
-	ipu, err := enf.GetImplicitPermissionsForUser("group:admin")
-	if err != nil {
-		t.Errorf("GetImplicitPermissionsForUser: %s", err.Error())
-	}
-	t.Logf("user.permissions.implisit: %#v", ipu)
-
-	can := false
-	for _, role := range ir {
-		t.Log("role:", role)
-		sub := role                                 // "group:admin"
-		obj := "/api/v1/covid19/current/by-country" //"/api/v1/geolocation/country"
-		act := "GET"                                // "POST"
-		can, err = enf.Enforce(sub, obj, act)
-		if err != nil {
-			t.Errorf("Enforce: %s", err.Error())
+		// get roles for user (group of users)
+		r, err := enf.GetRolesForUser("group:admin")
+		if assert.NoError(t, err, "Error while getting roles for user/group of user: GetRolesForUser") {
+			assert.NotEmpty(t, r)
+			t.Logf("user/group.roles: %#v", r)
 		}
 
-		t.Logf("can: %v", can)
+		// get implicit roles for user (group of user)
+		ir, err := enf.GetImplicitRolesForUser("group:admin")
+		if assert.NoError(t, err, "Error whilw getting implicit roles for user/group of users: GetImplicitRolesForUser") {
+			assert.NotEmpty(t, ir)
+			t.Logf("user.roles.implisit: %#v", ir)
+		}
+
+		// get permissions for user
+		// we are using casbin model: user -> group -> role -> permission
+		pu := enf.GetPermissionsForUser("group:admin")
+		// assert.NotEmpty(t, pu)
+		t.Logf("user/group.permissions: %#v", pu)
+
+		// get implicit permissions for user
+		ipu, err := enf.GetImplicitPermissionsForUser("group:admin")
+		if assert.NoError(t, err, "Error while getting implicit permission for user/group of user: GetImplicitPermissionsForUser") {
+			assert.NotEmpty(t, ipu)
+			t.Logf("user.permissions.implisit: %#v", ipu)
+		}
+
+		// check user permission (enforcer)
+		can := false
+		for _, role := range ir {
+			sub := role                                 // "group:admin"
+			obj := "/api/v1/covid19/current/by-country" //"/api/v1/geolocation/country"
+			act := "GET"                                // "POST"
+			can, err = enf.Enforce(sub, obj, act)
+			if assert.NoError(t, err, "Error while checking user permission: Enforce") {
+				t.Logf("can (role) `%s` access `%s.%s`: `%v`", sub, obj, act, can)
+			}
+		}
+
+		// get all policy
+		p := enf.GetPolicy()
+		assert.NotEmpty(t, p)
+		t.Logf("GetPolicy: %#v", p)
 	}
-
-	p := enf.GetPolicy()
-	t.Logf("GetPolicy: %#v", p)
-
-	t.Errorf("%v", can)
 }
