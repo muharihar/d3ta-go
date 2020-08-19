@@ -68,6 +68,7 @@ func StartRestAPIServer() error {
 		// fmt.Errorf("StartRestAPIServer.initializeSystems: %s", err.Error())
 		return err
 	}
+	defer initialize.CloseDBConnections(superHandler)
 
 	// init echo server
 	e := echo.New()

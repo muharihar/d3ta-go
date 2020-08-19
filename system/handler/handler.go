@@ -57,6 +57,11 @@ func (h *Handler) GetGormDB(conName string) (*gorm.DB, error) {
 	return db, nil
 }
 
+// GetGormDBs get Gorm Databases
+func (h *Handler) GetGormDBs() map[string]*gorm.DB {
+	return h.dbGorms
+}
+
 // SetCasbinEnforcer set CasbinEnforcer
 func (h *Handler) SetCasbinEnforcer(ceName string, ce *casbin.Enforcer) {
 	if h.casbinEnforcers == nil {

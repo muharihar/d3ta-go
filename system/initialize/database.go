@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 
 	// "github.com/jinzhu/gorm"
@@ -100,4 +101,16 @@ func openDBConnection(driverName, dataSourceName string) (*gorm.DB, error) {
 		return nil, err
 	}
 	return db, err
+}
+
+// CloseDBConnections close DB Connections
+func CloseDBConnections(h *handler.Handler) {
+	gorms := h.GetGormDBs()
+	for key, db := range gorms {
+		dbCon, _ := db.DB()
+		fmt.Printf("Closing DB Connection `%s`\n", key)
+		if err := dbCon.Close(); err != nil {
+			fmt.Printf("Error while closing DB Connection `%s`: %s\n", key, err.Error())
+		}
+	}
 }
