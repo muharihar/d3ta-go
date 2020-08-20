@@ -33,7 +33,7 @@ func initConfig(h *handler.Handler) (*config.Config, error) {
 		}
 
 		h.SetConfig(c)
-		initialize.LoadAllDatabaseConnection(h)
+		initializeSystems(h)
 	})
 
 	return cfg, nil
@@ -43,6 +43,11 @@ func initializeSystems(h *handler.Handler) error {
 
 	// initialize database
 	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
+		panic(err)
+	}
+
+	// initialize cacher
+	if err := initialize.OpenAllCacheConnection(h); err != nil {
 		panic(err)
 	}
 
