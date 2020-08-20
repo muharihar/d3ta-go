@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/casbin/casbin/v2"
+	"github.com/muharihar/d3ta-go/system/cacher"
 	"github.com/muharihar/d3ta-go/system/config"
 )
 
@@ -24,6 +25,7 @@ type Handler struct {
 	config          *config.Config
 	dbGorms         map[string]*gorm.DB
 	casbinEnforcers map[string]*casbin.Enforcer
+	cachers         map[string]*cacher.Cacher
 }
 
 // SetConfig set Config
@@ -78,4 +80,27 @@ func (h *Handler) GetCasbinEnforcer(ceName string) (*casbin.Enforcer, error) {
 		return nil, err
 	}
 	return ce, nil
+}
+
+// SetCacher set Cacher
+func (h *Handler) SetCacher(cName string, c *cacher.Cacher) {
+	if h.cachers == nil {
+		h.cachers = make(map[string]*cacher.Cacher)
+	}
+	h.cachers[cName] = c
+}
+
+// GetCacher get Cacher
+func (h *Handler) GetCacher(cName string) (*cacher.Cacher, error) {
+	c, exist := h.cachers[cName]
+	if !exist {
+		err := fmt.Errorf("Cacher Name '%s' Not Found", cName)
+		return nil, err
+	}
+	return c, nil
+}
+
+// GetCachers get Cachers
+func (h *Handler) GetCachers() map[string]*cacher.Cacher {
+	return h.cachers
 }
