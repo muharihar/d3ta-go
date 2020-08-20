@@ -5,17 +5,36 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-macaron/cache"
 	_ "github.com/go-macaron/cache/redis"
+	"github.com/muharihar/d3ta-go/system/config"
 )
 
+func newConfig(t *testing.T) (*config.Config, error) {
+	c, _, err := config.NewConfig("../../../../conf")
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
+
 func TestGoMacaron_Methods(t *testing.T) {
+	cfg, err := newConfig(t)
+	if err != nil {
+		t.Errorf("newConfig: %v", err.Error())
+		return
+	}
+
 	c, err := NewCacher(
 		"redis",
-		cache.Options{
-			Adapter:       "redis",
-			AdapterConfig: "addr:127.0.0.1:6379",
-		})
+		/*
+			cache.Options{
+				Adapter:       "redis",
+				AdapterConfig: "addr:127.0.0.1:6379",
+				...
+			})
+		*/
+		ConfigParser(cfg.Caches.TmpDataCache.Configurations),
+	)
 
 	if err != nil {
 		t.Errorf("NewRedisCacher: %v", err.Error())
@@ -91,10 +110,12 @@ func TestGoMacaron_Methods(t *testing.T) {
 		return
 	}
 
-	t.Log("Flush")
-	err = c.Flush()
-	if err != nil {
-		t.Errorf("Flush: %s", err.Error())
-		return
-	}
+	/*
+		t.Log("Flush")
+		err = c.Flush()
+		if err != nil {
+			t.Errorf("Flush: %s", err.Error())
+			return
+		}
+	*/
 }

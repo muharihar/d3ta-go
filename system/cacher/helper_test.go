@@ -4,7 +4,17 @@ import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/muharihar/d3ta-go/system/config"
 )
+
+func newConfig(t *testing.T) (*config.Config, error) {
+	c, _, err := config.NewConfig("../../conf")
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
 
 func testCacher(c *Cacher, t *testing.T) {
 	t.Log("Put: key1")
@@ -76,10 +86,12 @@ func testCacher(c *Cacher, t *testing.T) {
 		return
 	}
 
-	t.Log("Flush")
-	err = c.Flush()
-	if err != nil {
-		t.Errorf("Flush: %s", err.Error())
-		return
-	}
+	/*
+		t.Log("Flush")
+		err = c.Flush()
+		if err != nil {
+			t.Errorf("Flush: %s", err.Error())
+			return
+		}
+	*/
 }

@@ -5,15 +5,35 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/muharihar/d3ta-go/system/config"
 )
 
+func newConfig(t *testing.T) (*config.Config, error) {
+	c, _, err := config.NewConfig("../../../../conf")
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
+
 func TestRedis_Methods(t *testing.T) {
+	cfg, err := newConfig(t)
+	if err != nil {
+		t.Errorf("newConfig: %v", err.Error())
+		return
+	}
+
+	options := ConfigParser(cfg.Caches.SessionCache.Configurations)
 	c, err := NewCacher(
-		&redis.Options{
-			Network: "tcp",
-			Addr:    "127.0.0.1:6379",
-		})
+		/*
+			&redis.Options{
+				Network: "tcp",
+				Addr:    "127.0.0.1:6379",
+				...
+			}
+		*/
+		&options,
+	)
 
 	if err != nil {
 		t.Errorf("NewRedisCacher: %v", err.Error())
@@ -89,10 +109,12 @@ func TestRedis_Methods(t *testing.T) {
 		return
 	}
 
-	t.Log("Flush")
-	err = c.Flush()
-	if err != nil {
-		t.Errorf("Flush: %s", err.Error())
-		return
-	}
+	/*
+		t.Log("Flush")
+		err = c.Flush()
+		if err != nil {
+			t.Errorf("Flush: %s", err.Error())
+			return
+		}
+	*/
 }

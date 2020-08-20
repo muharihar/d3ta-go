@@ -42,4 +42,16 @@ func TestHandler(t *testing.T) {
 	if assert.NoError(t, err2, "Error while getting Casbin Enforcer from Handler: h.GetCasbinEnforcer()") {
 		assert.Nil(t, ce2)
 	}
+
+	// Cacher
+	c, err := h.GetCacher("not-found")
+	if assert.Error(t, err, "Should be Error while getting Cacher from Handler: h.GetCacher()") {
+		assert.Nil(t, c)
+	}
+
+	h.SetCacher("nil-value", nil)
+	c2, err2 := h.GetCacher("nil-value")
+	if assert.NoError(t, err2, "Error while getting Casbin Cacher from Handler: h.GetCacher()") {
+		assert.Nil(t, c2)
+	}
 }
