@@ -138,3 +138,32 @@ SMTPServers:
     password: "password"
     senderEmail: "no-reply@gmail.com"
     senderName: "D3TAgo NoReply"
+
+# Caches
+caches:
+  # Cache with Redis engine Sample
+  sessionCache:
+    connectionName: "session-cache"
+    engine: "redis"
+    driver: "redis"
+    configurations: # Following redis engine
+      network: "tcp"
+      host: "127.0.0.1"
+      port: "6379"
+      username: ""
+      password: ""
+      db: 1
+      maxRetries: 3
+      poolSize: 10
+      minIdleConns: 5
+  # Cache with GoMacaron/Cache engine Sample
+  tmpDataCache:
+    connectionName: "tmp-data-cache"
+    engine: "gomacaron"
+    driver: "redis"
+    configurations: # Following GoMacaron/Cache engine
+      adapter: "redis"
+      adapterConfig: "addr:127.0.0.1:6379"
+      interval: 60
+      occupyMode: false
+      section: "cache"

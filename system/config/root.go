@@ -9,6 +9,7 @@ type Config struct {
 	Databases    Databases    `json:"databases" yaml:"databases"`
 	Connectors   Connectors   `json:"connectors" yaml:"connectors"`
 	SMTPServers  SMTPServers  `json:"SMTPServers" yaml:"SMTPServers"`
+	Caches       Caches       `json:"caches" yaml:"caches"`
 }
 
 // DirLocations represent DirLocations
