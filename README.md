@@ -41,10 +41,10 @@ F. Providers (Connectors)
 1. data.covid19.go.id (Official Covid19 Website - Indonesia)
 2. covid19.who.it (Official Covid19 Website - WHO)
 
-G. Persistent Caches [to-do]
+G. Persistent Caches
 
-1. JWT Cache (Redis, File, DB, etc)
-2. Search Cache (ElasticSearch)
+1. Session/Token/JWT Cache (Redis, File, DB, etc) [tested: Redis]
+2. Search Cache (ElasticSearch) [to-do]
 
 H. Messaging [to-do]
 
@@ -63,7 +63,7 @@ $ git clone https://github.com/muharihar/d3ta-go.git
 ```
 a. copy `conf/config-sample.yaml` to `conf/config.yaml`
 
-b. setup your dependencies/requirements (e.g: database connection, smtp, etc.)
+b. setup your dependencies/requirements (e.g: database, redis, smtp, etc.)
 ```
 
 3. Development
@@ -87,7 +87,7 @@ $ ./d3ta-go server restapi
 
 ```shell
 $ cd d3ta-go
-$ sh build.sh
+$ sh dist.sh
 ```
 
 Pic: REST Server is running!
