@@ -105,6 +105,9 @@ func TestAuths_Login(t *testing.T) {
 	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
 		panic(err)
 	}
+	if err := initialize.OpenAllCacheConnection(handler); err != nil {
+		panic(err)
+	}
 
 	auths, err := NewFAuths(handler)
 	if err != nil {
@@ -138,6 +141,9 @@ func TestAuths_LoginApp(t *testing.T) {
 
 	handler := newHandler()
 	if err := initialize.LoadAllDatabaseConnection(handler); err != nil {
+		panic(err)
+	}
+	if err := initialize.OpenAllCacheConnection(handler); err != nil {
 		panic(err)
 	}
 

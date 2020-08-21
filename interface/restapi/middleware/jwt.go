@@ -10,13 +10,13 @@ import (
 	"github.com/muharihar/d3ta-go/interface/restapi/response"
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/identity"
+	"github.com/muharihar/d3ta-go/system/utils"
 )
 
 // JWTVerifier verify JWT token from internal Identity Provider
 func JWTVerifier(h *handler.Handler) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			// c.Response().Header().Set(echo.HeaderServer, "Echo/3.0")
 
 			authHeader := c.Request().Header.Get("Authorization")
 			//is bearer
@@ -49,12 +49,13 @@ func JWTVerifier(h *handler.Handler) echo.MiddlewareFunc {
 			}
 
 			// verify token to persistent storage
-			/*
-				claims, err := sdk.VerifyToken(token)
-				if err != nil {
-					return response.FailWithMessageWithCode(http.StatusInternalServerError, fmt.Sprintf("Identity Provider (EA2M) Error [%s]", err.Error()), c)
-				}
-			*/
+			exist, err := isSessionExist(token, h)
+			if err != nil {
+				return response.FailWithMessageWithCode(http.StatusInternalServerError, err.Error(), c)
+			}
+			if !exist {
+				return response.FailWithMessageWithCode(http.StatusInternalServerError, fmt.Sprintf("Identity Provider (EA2M) Error [%s]", "Invalid Token"), c)
+			}
 
 			// if expired
 			now := time.Now().Unix()
@@ -72,4 +73,19 @@ func JWTVerifier(h *handler.Handler) echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
+}
+
+func isSessionExist(sessionValue string, h *handler.Handler) (bool, error) {
+	cfg, err := h.GetConfig()
+	if err != nil {
+		return false, err
+	}
+	ce, err := h.GetCacher(cfg.Caches.SessionCache.ConnectionName)
+	ce.Context = "interface"
+	ce.Container = "session"
+	ce.Component = "jwt"
+
+	sessionKey := utils.MD5([]byte(sessionValue))
+
+	return ce.IsExist(sessionKey), nil
 }

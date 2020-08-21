@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	captcha "github.com/muharihar/d3ta-go/interface/restapi/feature/captcha"
 
@@ -131,6 +132,11 @@ func (f *FAuths) Login(c echo.Context) error {
 		return f.translateErrorMessage(err, c)
 	}
 
+	// set interface-session-jwt on cacher
+	if err := f._setSession(resp.Token, resp.ExpiredAt); err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+
 	return response.OkWithData(resp, c)
 }
 
@@ -152,5 +158,20 @@ func (f *FAuths) LoginApp(c echo.Context) error {
 		return f.translateErrorMessage(err, c)
 	}
 
+	// set interface-session-jwt on cacher
+	if err := f._setSession(resp.Token, resp.ExpiredAt); err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+
 	return response.OkWithData(resp, c)
+}
+
+func (f *FAuths) _setSession(token string, expiredAt int64) error {
+	sessionValue := token
+	expiredAtDT := time.Unix(expiredAt/1000, 0) // ExpiredAt = UnixTimeStamp
+	expiration := expiredAtDT.Sub(time.Now()).Seconds()
+	if err := f.SetSession(sessionValue, int64(expiration)); err != nil {
+		return err
+	}
+	return nil
 }

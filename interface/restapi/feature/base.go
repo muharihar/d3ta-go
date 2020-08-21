@@ -13,6 +13,7 @@ import (
 	sysErr "github.com/muharihar/d3ta-go/system/error"
 	"github.com/muharihar/d3ta-go/system/handler"
 	"github.com/muharihar/d3ta-go/system/identity"
+	"github.com/muharihar/d3ta-go/system/utils"
 )
 
 // BaseFeature represent BaseFeature
@@ -60,6 +61,29 @@ func (f *BaseFeature) translateErrorMessage(err error, c echo.Context) error {
 		}
 		return response.FailDetailedwithCode(http.StatusInternalServerError, data, "Operation failed with default error message", c)
 	}
+}
+
+// SetSession set Session
+func (f *BaseFeature) SetSession(sessionValue string, expiration int64) error {
+	cfg, err := f.handler.GetConfig()
+	if err != nil {
+		return err
+	}
+
+	ce, err := f.handler.GetCacher(cfg.Caches.SessionCache.ConnectionName)
+	if err != nil {
+		return err
+	}
+	ce.Context = "interface"
+	ce.Container = "session"
+	ce.Component = "jwt"
+
+	sessionKey := utils.MD5([]byte(sessionValue))
+	if err := ce.Put(sessionKey, sessionValue, expiration); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // SetIdentity set Identity
