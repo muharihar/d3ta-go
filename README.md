@@ -1,6 +1,6 @@
 # DDD Technical Architecture Patterns: Golang
 
-A Simple Implementation of `DDD Technical Architecture Patterms` in Go.
+A Simple Implementation of `DDD Technical Architecture Patterns` in Go.
 
 ## Diagram v 0.2.1
 
@@ -44,7 +44,7 @@ F. Providers (Connectors)
 G. Persistent Caches
 
 1. Session/Token/JWT Cache (Redis, File, DB, etc) [tested: Redis]
-2. Search Cache (ElasticSearch) [to-do]
+2. Indexer/Search Cache (ElasticSearch) [to-do]
 
 H. Messaging [to-do]
 
