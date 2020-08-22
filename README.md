@@ -2,9 +2,9 @@
 
 A Simple Implementation of `DDD Technical Architecture Patterms` in Go.
 
-## Diagram v 0.2.0
+## Diagram v 0.2.1
 
-![DDD-Technical-Architecture-Patterns-Golang-0.2.0](docs/img/DDD-Technical-Architecture-Patterns-Golang-0.2.0.png)
+![DDD-Technical-Architecture-Patterns-Golang-0.2.1](docs/img/DDD-Technical-Architecture-Patterns-Golang-0.2.1.png)
 
 ### Components
 
