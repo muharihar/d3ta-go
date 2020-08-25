@@ -167,3 +167,34 @@ caches:
       interval: 60
       occupyMode: false
       section: "cache"
+
+# Indexers
+indexers:
+  dataIndexer:
+    connectionName: "data-indexer"
+    engine: "elasticsearch"
+    driver: "elasticsearch"
+    version: "7"
+    configurations:
+      adapter: "elasticsearch"
+      addresses:
+        - "http://localhost:9200"
+        - "http://localhost:9201"
+      username: ""
+      password: ""
+      cloudID: ""
+      APIKey: ""
+  logIndexer:
+    connectionName: "log-indexer"
+    engine: "elasticsearch"
+    driver: "elasticsearch"
+    version: "8"
+    configurations:
+      adapter: "elasticseach"
+      addresses:
+        - "http://localhost:9201"
+        - "http://localhost:9200"
+      username: ""
+      password: ""
+      cloudID: ""
+      APIKey: ""

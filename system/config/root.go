@@ -10,6 +10,7 @@ type Config struct {
 	Connectors   Connectors   `json:"connectors" yaml:"connectors"`
 	SMTPServers  SMTPServers  `json:"SMTPServers" yaml:"SMTPServers"`
 	Caches       Caches       `json:"caches" yaml:"caches"`
+	Indexers     Indexers     `json:"indexers" yaml:"indexers"`
 }
 
 // DirLocations represent DirLocations
