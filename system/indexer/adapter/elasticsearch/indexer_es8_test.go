@@ -12,13 +12,12 @@ func TestIndexerES8_Methods(t *testing.T) {
 	}
 
 	cfgES8 := ConfigParserES8(cfg.Indexers.DataIndexer.Configurations)
-	t.Logf("cfgES8: %#v\n", cfgES8)
 
 	indexer, err := NewIndexerES8(cfgES8)
 	if err != nil {
 		t.Errorf("Error while creating NewIndexerES8 (ES8): %s", err.Error())
+		return
 	}
 
 	testIndexerMethods(indexer, t)
-	t.Error("SHOWTEST")
 }

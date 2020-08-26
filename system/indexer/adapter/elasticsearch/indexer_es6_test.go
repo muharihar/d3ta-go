@@ -12,13 +12,12 @@ func TestIndexerES6_Methods(t *testing.T) {
 	}
 
 	cfgES6 := ConfigParserES6(cfg.Indexers.LogIndexer.Configurations)
-	t.Logf("cfgES6: %#v\n", cfgES6)
 
 	indexer, err := NewIndexerES6(cfgES6)
 	if err != nil {
 		t.Errorf("Error while creating NewIndexerES6 (ES6): %s", err.Error())
+		return
 	}
 
 	testIndexerMethods(indexer, t)
-	t.Error("SHOWTEST")
 }

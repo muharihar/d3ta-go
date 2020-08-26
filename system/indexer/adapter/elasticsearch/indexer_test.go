@@ -13,13 +13,12 @@ func TestIndexer_Methods(t *testing.T) {
 	}
 
 	cfgES7 := ConfigParserES7(cfg.Indexers.DataIndexer.Configurations)
-	t.Logf("cfgES7: %#v\n", cfgES7)
 
 	indexer, err := NewIndexer(ESVersion7, cfgES7)
 	if err != nil {
 		t.Errorf("Error while creating NewIndexer (ES7): %s", err.Error())
+		return
 	}
 
 	testIndexerMethods(indexer, t)
-	t.Error("SHOWTEST")
 }
