@@ -8,6 +8,9 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.0.2
 	github.com/dchest/captcha v0.0.0-20170622155422-6a29415a8364
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/elastic/go-elasticsearch/v6 v6.8.10
+	github.com/elastic/go-elasticsearch/v7 v7.9.0
+	github.com/elastic/go-elasticsearch/v8 v8.0.0-20200819071622-59b6a186f8dd
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687
 	github.com/go-ozzo/ozzo-validation/v4 v4.2.2
