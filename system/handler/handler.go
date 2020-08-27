@@ -9,6 +9,7 @@ import (
 	"github.com/casbin/casbin/v2"
 	"github.com/muharihar/d3ta-go/system/cacher"
 	"github.com/muharihar/d3ta-go/system/config"
+	"github.com/muharihar/d3ta-go/system/indexer"
 )
 
 // NewHandler new Handler
@@ -26,6 +27,7 @@ type Handler struct {
 	dbGorms         map[string]*gorm.DB
 	casbinEnforcers map[string]*casbin.Enforcer
 	cachers         map[string]*cacher.Cacher
+	indexers        map[string]*indexer.Indexer
 }
 
 // SetConfig set Config
@@ -103,4 +105,27 @@ func (h *Handler) GetCacher(cName string) (*cacher.Cacher, error) {
 // GetCachers get Cachers
 func (h *Handler) GetCachers() map[string]*cacher.Cacher {
 	return h.cachers
+}
+
+// SetIndexer set Indexer
+func (h *Handler) SetIndexer(idxName string, idx *indexer.Indexer) {
+	if h.indexers == nil {
+		h.indexers = make(map[string]*indexer.Indexer)
+	}
+	h.indexers[idxName] = idx
+}
+
+// GetIndexer get Indexer
+func (h *Handler) GetIndexer(idxName string) (*indexer.Indexer, error) {
+	idx, exist := h.indexers[idxName]
+	if !exist {
+		err := fmt.Errorf("Indexer Name '%s' Not Found", idxName)
+		return nil, err
+	}
+	return idx, nil
+}
+
+// GetIndexers get Indexers
+func (h *Handler) GetIndexers() map[string]*indexer.Indexer {
+	return h.indexers
 }

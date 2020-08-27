@@ -51,7 +51,19 @@ func TestHandler(t *testing.T) {
 
 	h.SetCacher("nil-value", nil)
 	c2, err2 := h.GetCacher("nil-value")
-	if assert.NoError(t, err2, "Error while getting Casbin Cacher from Handler: h.GetCacher()") {
+	if assert.NoError(t, err2, "Error while getting Cacher from Handler: h.GetCacher()") {
 		assert.Nil(t, c2)
+	}
+
+	// Indexer
+	idx, err := h.GetIndexer("not-found")
+	if assert.Error(t, err, "Shoudl be Error while getting Indexer from Handler: h.GetIndexer()") {
+		assert.Nil(t, idx)
+	}
+
+	h.SetIndexer("nil-value", nil)
+	idx2, err2 := h.GetIndexer("nil-value")
+	if assert.NoError(t, err2, "Error while getting Indexer from Handler: h.GetIndexer()") {
+		assert.Nil(t, idx2)
 	}
 }
