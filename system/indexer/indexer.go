@@ -48,6 +48,24 @@ func (i *Indexer) GetEngine() interface{} {
 	return i.indexerEngine.GetEngine()
 }
 
+func (i *Indexer) Search(query io.Reader, prettify bool) ([]byte, error) {
+	return i.indexerEngine.Search(query, prettify)
+}
+
+func (i *Indexer) SearchIndexDoc(index string, query io.Reader, size int, prettify bool) ([]byte, error) {
+	_index := fmt.Sprintf("%s~%s~%s~%s", strings.ToLower(i.Context), strings.ToLower(i.Container), strings.ToLower(i.Component), index)
+	return i.indexerEngine.SearchIndexDoc(_index, query, size, prettify)
+}
+
+func (i *Indexer) IndexExist(indexs []string) (bool, error) {
+	var _indexs []string
+	for _, v := range indexs {
+		_index := fmt.Sprintf("%s~%s~%s~%s", strings.ToLower(i.Context), strings.ToLower(i.Container), strings.ToLower(i.Component), v)
+		_indexs = append(_indexs, _index)
+	}
+	return i.indexerEngine.IndexExist(_indexs)
+}
+
 func (i *Indexer) CreateIndex(index string, mapping io.Reader) error {
 	_index := fmt.Sprintf("%s~%s~%s~%s", strings.ToLower(i.Context), strings.ToLower(i.Container), strings.ToLower(i.Component), index)
 	return i.indexerEngine.CreateIndex(_index, mapping)

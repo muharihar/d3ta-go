@@ -1,11 +1,13 @@
 package elasticsearch
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
 
 	es8 "github.com/elastic/go-elasticsearch/v8"
+	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/muharihar/d3ta-go/system/indexer/adapter"
 )
 
@@ -16,6 +18,7 @@ func NewIndexerES8(cfg es8.Config) (adapter.IIndexerEngine, error) {
 	idx := &IndexerES8{
 		esVersion: ESVersion8,
 	}
+	idx.ctx = context.Background()
 	if idx.engine, err = es8.NewClient(cfg); err != nil {
 		return nil, err
 	}
@@ -25,6 +28,7 @@ func NewIndexerES8(cfg es8.Config) (adapter.IIndexerEngine, error) {
 
 // IndexerES8 type
 type IndexerES8 struct {
+	ctx       context.Context
 	esVersion ESVersion
 	engine    *es8.Client
 }
@@ -32,6 +36,69 @@ type IndexerES8 struct {
 // GetEngine get Indexer Engine
 func (i *IndexerES8) GetEngine() interface{} {
 	return i.engine
+}
+
+func (i *IndexerES8) Search(query io.Reader, prettify bool) ([]byte, error) {
+	var res *esapi.Response
+	var err error
+
+	if prettify {
+		res, err = i.engine.Search(
+			i.engine.Search.WithContext(i.ctx),
+			i.engine.Search.WithBody(query),
+			i.engine.Search.WithPretty(),
+		)
+	} else {
+		res, err = i.engine.Search(
+			i.engine.Search.WithContext(i.ctx),
+			i.engine.Search.WithBody(query),
+		)
+	}
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
+
+func (i *IndexerES8) SearchIndexDoc(index string, query io.Reader, size int, prettify bool) ([]byte, error) {
+	var res *esapi.Response
+	var err error
+
+	if prettify {
+		res, err = i.engine.Search(
+			i.engine.Search.WithContext(i.ctx),
+			i.engine.Search.WithIndex(index),
+			i.engine.Search.WithBody(query),
+			i.engine.Search.WithSize(size),
+			i.engine.Search.WithPretty(),
+		)
+
+	} else {
+		res, err = i.engine.Search(
+			i.engine.Search.WithContext(i.ctx),
+			i.engine.Search.WithIndex(index),
+			i.engine.Search.WithBody(query),
+			i.engine.Search.WithSize(size),
+		)
+	}
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
 }
 
 func (i *IndexerES8) IndexExist(indexs []string) (bool, error) {

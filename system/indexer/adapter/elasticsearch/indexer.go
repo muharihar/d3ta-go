@@ -59,7 +59,15 @@ type Indexer struct {
 
 // GetEngine get Indexer Engine
 func (i *Indexer) GetEngine() interface{} {
-	return i.engine
+	return i.engine.GetEngine()
+}
+
+func (i *Indexer) Search(query io.Reader, prettify bool) ([]byte, error) {
+	return i.engine.Search(query, prettify)
+}
+
+func (i *Indexer) SearchIndexDoc(index string, query io.Reader, size int, prettify bool) ([]byte, error) {
+	return i.engine.SearchIndexDoc(index, query, size, prettify)
 }
 
 func (i *Indexer) IndexExist(indexs []string) (bool, error) {

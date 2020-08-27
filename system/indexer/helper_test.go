@@ -20,6 +20,7 @@ func newConfig(t *testing.T) (*config.Config, error) {
 }
 
 func testCreateIndex(indexer *Indexer, index string, t *testing.T) {
+	// create index
 	mappings := `
 {
     "aliases": {

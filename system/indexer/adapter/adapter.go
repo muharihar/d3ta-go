@@ -6,6 +6,9 @@ import "io"
 type IIndexerEngine interface {
 	GetEngine() interface{}
 
+	Search(query io.Reader, prettify bool) ([]byte, error)
+	SearchIndexDoc(index string, query io.Reader, size int, prettify bool) ([]byte, error)
+
 	IndexExist(indexs []string) (bool, error)
 	CreateIndex(index string, mapping io.Reader) error
 	DropIndex(indexs []string) error

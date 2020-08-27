@@ -35,11 +35,23 @@ func TestEngine_Methods(t *testing.T) {
 	// index := fmt.Sprintf("test-index-%s", utils.GenerateUUID())
 	index := fmt.Sprintf("test-index-%s", time.Now().Format("2006-01-02"))
 	t.Logf("Index: `%s`", index)
-	testCreateIndex(i, index, t)
 
+	// check index
+	exist, err := i.IndexExist([]string{index})
+	if err != nil {
+		t.Errorf("Error while checking Index: %s", err.Error())
+		return
+	}
+	if !exist {
+		// create index
+		testCreateIndex(i, index, t)
+	}
+
+	// test index/document operation
 	testIndexerMethods(i, index, t)
 
-	//time.Sleep(20 * time.Second)
+	// drop index
+	time.Sleep(20 * time.Second)
 	err = i.DropIndex([]string{index})
 	if err != nil {
 		t.Errorf("Error while droping Index: %s", err.Error())
