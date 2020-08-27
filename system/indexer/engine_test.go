@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/muharihar/d3ta-go/system/indexer/adapter"
-	ieES "github.com/muharihar/d3ta-go/system/indexer/adapter/elasticsearch"
 )
 
 func TestEngine_Methods(t *testing.T) {
@@ -20,9 +19,12 @@ func TestEngine_Methods(t *testing.T) {
 		adapter.IEOptions{
 			Engine:  adapter.IEType(cfg.Indexers.DataIndexer.Engine),
 			Version: cfg.Indexers.DataIndexer.Version,
-			Options: ieES.ConfigParserES7(cfg.Indexers.DataIndexer.Configurations),
+			Options: cfg.Indexers.DataIndexer.Configurations,
 		},
 	)
+	if err != nil {
+		t.Errorf("Error while creating NewIndexerEngine: %s", err.Error())
+	}
 
 	i, err := NewIndexer(it, ie)
 	if err != nil {

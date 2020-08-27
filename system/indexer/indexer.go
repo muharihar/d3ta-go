@@ -12,7 +12,7 @@ import (
 type IndexerType string
 
 const (
-	ElasticSearchIndexer IndexerType = "ElasticSearch"
+	ElasticSearchIndexer IndexerType = "elasticsearch"
 )
 
 func NewIndexer(indexerType IndexerType, indexerEngine adapter.IIndexerEngine) (*Indexer, error) {

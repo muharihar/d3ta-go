@@ -3,10 +3,6 @@ package indexer
 import (
 	"fmt"
 
-	es6 "github.com/elastic/go-elasticsearch/v6"
-	es7 "github.com/elastic/go-elasticsearch/v7"
-	es8 "github.com/elastic/go-elasticsearch/v8"
-
 	"github.com/muharihar/d3ta-go/system/indexer/adapter"
 	ieES "github.com/muharihar/d3ta-go/system/indexer/adapter/elasticsearch"
 )
@@ -17,8 +13,8 @@ func NewIndexerEngine(indexerType IndexerType, ieOptions adapter.IEOptions) (ada
 
 	switch ieOptions.Engine {
 	case adapter.IEElasticSearch:
-		if tOpt != "elasticsearch.Config" {
-			return nil, "", fmt.Errorf("Invalid ElasticSearch options (should be `elasticsearch.Config`)")
+		if tOpt != "map[string]interface {}" {
+			return nil, "", fmt.Errorf("Invalid ElasticSearch options (should be: `map[string]interface {}`) [actual: `%s`]", tOpt)
 		}
 
 		var ie adapter.IIndexerEngine
@@ -26,13 +22,13 @@ func NewIndexerEngine(indexerType IndexerType, ieOptions adapter.IEOptions) (ada
 
 		switch ieOptions.Version {
 		case "6":
-			cfg := ieOptions.Options.(es6.Config)
+			cfg := ieES.ConfigParserES6(ieOptions.Options)
 			ie, err = ieES.NewIndexer(ieES.ESVersion6, cfg)
 		case "7":
-			cfg := ieOptions.Options.(es7.Config)
+			cfg := ieES.ConfigParserES7(ieOptions.Options)
 			ie, err = ieES.NewIndexer(ieES.ESVersion7, cfg)
 		case "8":
-			cfg := ieOptions.Options.(es8.Config)
+			cfg := ieES.ConfigParserES8(ieOptions.Options)
 			ie, err = ieES.NewIndexer(ieES.ESVersion8, cfg)
 		default:
 			err = fmt.Errorf("Invalid adapter.IEElasticSearch Version: %s", ieOptions.Version)
