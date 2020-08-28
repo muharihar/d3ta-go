@@ -34,13 +34,13 @@ tags:
       [Generic (sub)Domain] Authentication (using DDD layered architecture, [G]ORM)
   - name: GeoLocation
     description: >-
-      [Supporting (sub)Domain] Geo Location Data (using Simple CRUD with [G]ORM)
+      [Supporting (sub)Domain] Geo Location Data (using Simple CRUD with [G]ORM, ElasticSearch)
   - name: Email
     description: >-
       [Generic (sub)Domain] Email (using DDD layered architecture, [G]ORM, smtp)
   - name: Covid19
     description: >-
-      [Core (sub)Domain] Covid19 (using DDD layered architecture, adapter-connector)
+      [Core (sub)Domain] Covid19 (using DDD layered architecture, adapter-connector, Redis)
   
 security:
   - bearerAuth: []
@@ -141,6 +141,30 @@ paths:
         - GeoLocation
       operationId: GeoLocation.Country.ListALl
       summary: Display Country List
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+
+  /api/v1/geolocation/countries/indexer/refresh:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.RefreshIndexer
+      summary: Refresh Country Indexer [ElasticSearch]
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.RefreshIndexer.Request'
+      responses:
+        default:
+          $ref: '#/components/responses/GeneralResponse'
+  
+  /api/v1/geolocation/countries/indexer/search:
+    post:
+      tags:
+        - GeoLocation
+      operationId: GeoLocation.Country.SearchIndexer
+      summary: Search Country Indexer [ElasticSearch]
+      requestBody:
+        $ref: '#/components/requestBodies/geoLocation.Country.SearchIndexer.Request'
       responses:
         default:
           $ref: '#/components/responses/GeneralResponse'
@@ -427,6 +451,36 @@ components:
                 ISO2Code: ID
                 ISO3Code: 
                 WHORegion: SEARO
+    
+    geoLocation.Country.RefreshIndexer.Request:
+      description: Refresh Geolocation Country Indexer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.RefreshIndexer.Request'
+          examples:
+            Sync:
+              value:
+                processType: SYNC
+            Async:
+              value:
+                processType: ASYNC
+    
+    geoLocation.Country.SearchIndexer.Request:
+      description: Search Geolocation Country Indexer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/geoLocation.Country.SearchIndexer.Request'
+          examples:
+            Min2Char:
+              value:
+                name: IN
+            More2Char:
+              value:
+                name: IND
     
     geoLocation.Country.Update.Request:
       description: Update Geolocation Country
@@ -748,6 +802,25 @@ components:
           $ref: '#/components/schemas/geoLocation.field.country.ISO3Code'
         WHORegion:
           $ref: '#/components/schemas/geoLocation.field.country.WHORegion'
+    
+    geoLocation.Country.RefreshIndexer.Request:
+      type: object
+      properties:
+        processType:
+          $ref: '#/components/schemas/geoLocation.indexer.field.processingType'
+
+    geoLocation.Country.SearchIndexer.Request:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/geoLocation.field.country.name'
+
+    geoLocation.indexer.field.processingType:
+      type: string
+      example: SYNC
+      enum:
+        - SYNC
+        - ASYNC
 
     geoLocation.Country.Update.Request:
       type: object
