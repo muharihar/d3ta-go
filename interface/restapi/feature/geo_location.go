@@ -49,6 +49,54 @@ func (f *FGeoLocation) ListAllCountry(c echo.Context) error {
 	return response.OkWithData(resp, c)
 }
 
+// RefreshCountryIndexer refresh Country Indexer
+func (f *FGeoLocation) RefreshCountryIndexer(c echo.Context) error {
+	// identity
+	i, err := f.SetIdentity(c)
+	if err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+	if !i.IsLogin || i.IsAnonymous {
+		return response.FailWithMessageWithCode(http.StatusForbidden, "Forbidden Access", c)
+	}
+
+	req := new(appGeoLocDTO.RefreshCountryIndexerReqDTO)
+	if err := c.Bind(req); err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+
+	resp, err := f.appGeoLocation.CountrySvc.RefreshIndexer(req, i)
+	if err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+
+	return response.CreatedWithData(resp, c)
+}
+
+// SearchCountryIndexer search Country Indexer
+func (f *FGeoLocation) SearchCountryIndexer(c echo.Context) error {
+	// identity
+	i, err := f.SetIdentity(c)
+	if err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+	if !i.IsLogin || i.IsAnonymous {
+		return response.FailWithMessageWithCode(http.StatusForbidden, "Forbidden Access", c)
+	}
+
+	req := new(appGeoLocDTO.SearchCountryIndexerReqDTO)
+	if err := c.Bind(req); err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+
+	resp, err := f.appGeoLocation.CountrySvc.SearchIndexer(req, i)
+	if err != nil {
+		return f.translateErrorMessage(err, c)
+	}
+
+	return response.CreatedWithData(resp, c)
+}
+
 // GetCountry get Country
 func (f *FGeoLocation) GetCountry(c echo.Context) error {
 	// identity

@@ -51,6 +51,11 @@ func initializeSystems(h *handler.Handler) error {
 		panic(err)
 	}
 
+	// initialize indexer
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		panic(err)
+	}
+
 	return nil
 }
 
