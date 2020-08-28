@@ -4,32 +4,15 @@ import (
 	"testing"
 
 	schema "github.com/muharihar/d3ta-go/modules/geolocation/crud/domain/schema/country"
-	"github.com/muharihar/d3ta-go/system/config"
-	"github.com/muharihar/d3ta-go/system/handler"
-	"github.com/muharihar/d3ta-go/system/identity"
 	"github.com/muharihar/d3ta-go/system/initialize"
 )
 
-func newConfig(t *testing.T) (*config.Config, error) {
-	c, _, err := config.NewConfig("../../../../../conf")
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
-}
-
 func newCountrySvc(t *testing.T) (*CountrySvc, error) {
-	h, err := handler.NewHandler()
+	h, err := newHandler(t)
 	if err != nil {
 		return nil, err
 	}
 
-	c, err := newConfig(t)
-	if err != nil {
-		return nil, err
-	}
-
-	h.SetConfig(c)
 	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		return nil, err
 	}
@@ -40,18 +23,6 @@ func newCountrySvc(t *testing.T) (*CountrySvc, error) {
 	}
 
 	return r, nil
-}
-
-func newIdentity(h *handler.Handler, t *testing.T) identity.Identity {
-	i, err := identity.NewIdentity(
-		identity.DefaultIdentity, identity.TokenJWT, "", nil, nil, h,
-	)
-	if err != nil {
-		t.Errorf("NewIdentity: %s", err.Error())
-	}
-	i.Claims.Username = "test.d3tago"
-
-	return i
 }
 
 func TestCountrySvc_ListAll(t *testing.T) {

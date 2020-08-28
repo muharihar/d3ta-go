@@ -29,3 +29,12 @@ type Country struct {
 	ISO3Code  string `json:"ISO3Code"`
 	WHORegion string `json:"WHORegion"`
 }
+
+// ToJSON covert to JSON
+func (r *Country) ToJSON() []byte {
+	json, err := json.Marshal(r)
+	if err != nil {
+		return nil
+	}
+	return json
+}
