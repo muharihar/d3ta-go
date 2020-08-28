@@ -34,6 +34,9 @@ func newCountrySvc(t *testing.T) (*CountrySvc, *handler.Handler, error) {
 	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		return nil, nil, err
 	}
+	if err := initialize.OpenAllIndexerConnection(h); err != nil {
+		return nil, nil, err
+	}
 
 	r, err := NewCountrySvc(h)
 	if err != nil {
@@ -81,6 +84,52 @@ func TestCountrySvc_ListAll(t *testing.T) {
 			t.Errorf("respJSON: %s", err.Error())
 		}
 		t.Logf("Resp: %s", respJSON)
+	}
+}
+
+func TestCountrySvc_RefreshIndexer(t *testing.T) {
+	cSvc, h, err := newCountrySvc(t)
+	if err != nil {
+		t.Errorf("newCountrySvc: %s", err.Error())
+	}
+
+	req := new(appDTO.RefreshCountryIndexerReqDTO)
+	req.ProcessType = "SYNC"
+
+	i := newIdentity(h, t)
+	i.RequestInfo.RequestObject = "/api/v1/geolocation/countries/indexer/refresh"
+	i.RequestInfo.RequestAction = "POST"
+
+	resp, err := cSvc.RefreshIndexer(req, i)
+	if err != nil {
+		t.Errorf("RefreshIndexer: %s", err.Error())
+	}
+
+	if resp != nil {
+		t.Logf("Resp: %s", string(resp.ToJSON()))
+	}
+}
+
+func TestCountrySvc_SearchIndexer(t *testing.T) {
+	cSvc, h, err := newCountrySvc(t)
+	if err != nil {
+		t.Errorf("newCountrySvc: %s", err.Error())
+	}
+
+	req := new(appDTO.SearchCountryIndexerReqDTO)
+	req.Name = "IN"
+
+	i := newIdentity(h, t)
+	i.RequestInfo.RequestObject = "/api/v1/geolocation/countries/indexer/search"
+	i.RequestInfo.RequestAction = "POST"
+
+	resp, err := cSvc.SearchIndexer(req, i)
+	if err != nil {
+		t.Errorf("SearchIndexer: %s", err.Error())
+	}
+
+	if resp != nil {
+		t.Logf("Resp: %s", string(resp.ToJSON()))
 	}
 }
 

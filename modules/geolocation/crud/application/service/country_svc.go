@@ -13,14 +13,17 @@ import (
 
 // NewCountrySvc new CountrySvc
 func NewCountrySvc(h *handler.Handler) (*CountrySvc, error) {
+	var err error
+
 	svc := new(CountrySvc)
 	svc.handler = h
 
-	domSvc, err := domSVC.NewCountrySvc(h)
-	if err != nil {
+	if svc.domSvc, err = domSVC.NewCountrySvc(h); err != nil {
 		return nil, err
 	}
-	svc.domSvc = domSvc
+	if svc.indexerSvc, err = domSVC.NewCountryIndexerSvc(h); err != nil {
+		return nil, err
+	}
 
 	return svc, nil
 }
@@ -28,7 +31,8 @@ func NewCountrySvc(h *handler.Handler) (*CountrySvc, error) {
 // CountrySvc represent CountrySvc
 type CountrySvc struct {
 	BaseSvc
-	domSvc *domSVC.CountrySvc
+	domSvc     *domSVC.CountrySvc
+	indexerSvc *domSVC.CountryIndexerSvc
 }
 
 // ListAll list All Country
@@ -45,6 +49,68 @@ func (s *CountrySvc) ListAll(i identity.Identity) (*appDTO.ListCountryResDTO, er
 	}
 
 	resDTO := new(appDTO.ListCountryResDTO)
+	resDTO.Query = res.Query
+	resDTO.Data = res.Data
+
+	return resDTO, nil
+}
+
+// RefreshIndexer refresh Indexer
+func (s *CountrySvc) RefreshIndexer(req *appDTO.RefreshCountryIndexerReqDTO, i identity.Identity) (*appDTO.RefreshCountryIndexerResDTO, error) {
+	if i.CanAccessCurrentRequest() == false {
+		errMsg := fmt.Sprintf("You are not authorized to access [`%s.%s`]",
+			i.RequestInfo.RequestObject, i.RequestInfo.RequestAction)
+		return nil, sysError.CustomForbiddenAccess(errMsg)
+	}
+
+	reqDom := &domSchema.RefreshCountryIndexerRequest{
+		ProcessType: req.ProcessType,
+	}
+	if err := reqDom.Validate(); err != nil {
+		return nil, err
+	}
+
+	res, err := s.domSvc.ListAll(i)
+	if err != nil {
+		return nil, err
+	}
+
+	if req.ProcessType == "SYNC" {
+		if err := s.indexerSvc.Refresh(res.Data); err != nil {
+			return nil, err
+		}
+	} else {
+		go s.indexerSvc.Refresh(res.Data)
+	}
+
+	resDTO := new(appDTO.RefreshCountryIndexerResDTO)
+	resDTO.Status = "OK"
+	resDTO.ProcessType = req.ProcessType
+
+	return resDTO, nil
+}
+
+// SearchIndexer search indexer
+func (s *CountrySvc) SearchIndexer(req *appDTO.SearchCountryIndexerReqDTO, i identity.Identity) (*appDTO.SearchCountryIndexerResDTO, error) {
+	if i.CanAccessCurrentRequest() == false {
+		errMsg := fmt.Sprintf("You are not authorized to access [`%s.%s`]",
+			i.RequestInfo.RequestObject, i.RequestInfo.RequestAction)
+		return nil, sysError.CustomForbiddenAccess(errMsg)
+	}
+
+	reqDom := &domSchema.SearchCountryIndexerRequest{
+		Name: req.Name,
+	}
+
+	if err := reqDom.Validate(); err != nil {
+		return nil, err
+	}
+
+	res, err := s.indexerSvc.Search(reqDom)
+	if err != nil {
+		return nil, err
+	}
+	resDTO := new(appDTO.SearchCountryIndexerResDTO)
 	resDTO.Query = res.Query
 	resDTO.Data = res.Data
 
@@ -108,6 +174,11 @@ func (s *CountrySvc) Add(req *appDTO.AddCountryReqDTO, i identity.Identity) (*ap
 	resDTO.Query = req
 	resDTO.Data = res.Data
 
+	// save to index
+	if err := s.indexerSvc.Create(resDTO.Data); err != nil {
+		return nil, err
+	}
+
 	return resDTO, nil
 }
 
@@ -142,6 +213,11 @@ func (s *CountrySvc) Update(req *appDTO.UpdateCountryReqDTO, i identity.Identity
 	resDTO.Query = req
 	resDTO.Data = res.Data
 
+	// update to index
+	if err := s.indexerSvc.Update(resDTO.Data); err != nil {
+		return nil, err
+	}
+
 	return resDTO, nil
 }
 
@@ -169,6 +245,11 @@ func (s *CountrySvc) Delete(req *appDTO.DeleteCountryReqDTO, i identity.Identity
 	resDTO := new(appDTO.DeleteCountryResDTO)
 	resDTO.Query = req
 	resDTO.Data = res.Data
+
+	// delete from index
+	if err := s.indexerSvc.Delete(resDTO.Data); err != nil {
+		return nil, err
+	}
 
 	return resDTO, nil
 }
