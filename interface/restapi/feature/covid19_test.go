@@ -31,6 +31,10 @@ func TestFCovid19_DisplayCurrentDataByCountry(t *testing.T) {
 		t.Errorf("initialize.LoadAllDatabaseConnection: %s", err.Error())
 		return
 	}
+	if err := initialize.OpenAllCacheConnection(handler); err != nil {
+		t.Errorf("initialize.OpenAllCacheConnection: %s", err.Error())
+		return
+	}
 
 	// set identity (test only)
 	token, claims, err := generateUserTestToken(handler, t)

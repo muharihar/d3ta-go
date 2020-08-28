@@ -35,6 +35,9 @@ func newCurrentSvc(t *testing.T) (*CurrentSvc, *handler.Handler, error) {
 	if err := initialize.LoadAllDatabaseConnection(h); err != nil {
 		return nil, nil, err
 	}
+	if err := initialize.OpenAllCacheConnection(h); err != nil {
+		return nil, nil, err
+	}
 
 	r, err := NewCurrentSvc(h)
 	if err != nil {
