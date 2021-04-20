@@ -2,6 +2,8 @@
 
 A Simple Implementation of `DDD Technical Architecture Patterns` in Go.
 
+Modular Version: https://github.com/d3ta-go
+
 ## Diagram v 0.2.2
 
 ![DDD-Technical-Architecture-Patterns-Golang-0.2.2](docs/img/DDD-Technical-Architecture-Patterns-Golang-0.2.2.png)
