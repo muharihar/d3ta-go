@@ -15,7 +15,7 @@ require (
 	github.com/go-macaron/cache v0.0.0-20200329073519-53bb48172687
 	github.com/go-ozzo/ozzo-validation/v4 v4.2.2
 	github.com/go-redis/redis/v8 v8.0.0-beta.7
-	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+	github.com/golang/glog v1.2.4
 	github.com/google/uuid v1.1.1
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
